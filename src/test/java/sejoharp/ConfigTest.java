@@ -17,16 +17,16 @@ public class ConfigTest {
 
 	@Test
 	public void containsAllProperties() {
-		assertThat(config.getSmtpserver(), is("smtp.web.de"));
+		assertThat(config.getSmtpserver(), is("smtp.domain.de"));
 		assertThat(config.getPort(), is("587"));
-		assertThat(config.getUser(), is("username"));
-		assertThat(config.getPassword(), is("password"));
+		assertThat(config.getUser(), is("emailuser"));
+		assertThat(config.getPassword(), is("secret"));
 		
 		assertThat(config.getSenderaddress(), is("sender@domain.de"));
-		assertThat(config.getTournamentUrl(), is("http://foobar.de"));
-		assertThat(config.getSearchName1(), is("myname1"));
-		assertThat(config.getRecipientaddress1(), is("recipient1@domain.de"));
-		assertThat(config.getSearchName2(), is("myname2"));
-		assertThat(config.getRecipientaddress2(), is("recipient2@domain.de"));
+		assertThat(config.getTournamentUrl(), is("http://domain.de"));
+		assertThat(config.getSearchName1(), is("name1"));
+		assertThat(config.getRecipientaddress1(), is("name1@domain.de"));
+		assertThat(config.getSearchName2(), is("name2"));
+		assertThat(config.getRecipientaddress2(), is("name2@domain.de"));
 	}
 }

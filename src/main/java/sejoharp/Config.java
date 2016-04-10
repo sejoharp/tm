@@ -105,4 +105,14 @@ public class Config {
 	public void setTournamentUrl(String tournamentUrl) {
 		this.tournamentUrl = tournamentUrl;
 	}
+
+	@Override
+	public String toString() {
+		return "Config [port=" + port + ", smtpserver=" + smtpserver
+				+ ", user=" + user + ", senderaddress=" + senderaddress
+				+ ", recipientaddress1=" + recipientaddress1
+				+ ", recipientaddress2=" + recipientaddress2
+				+ ", tournamentUrl=" + tournamentUrl + ", searchName1="
+				+ searchName1 + ", searchName2=" + searchName2 + "]";
+	}
 }

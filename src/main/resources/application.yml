@@ -1,0 +1,12 @@
+email:
+   smtpserver: smtp.domain.de
+   port: 587
+   user: emailuser
+   password: secret
+   senderaddress: sender@domain.de
+   recipientaddress1: name1@domain.de
+   recipientaddress2: name2@domain.de
+tournamentUrl: http://domain.de
+searchName1: name1
+searchName2: name2
+
