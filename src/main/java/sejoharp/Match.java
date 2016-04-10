@@ -6,6 +6,7 @@ public class Match {
 	private String tableNumber;
 	private String disciplin;
 	private String round;
+	private String notificationEmail;
 
 	public String getTeam1() {
 		return team1;
@@ -103,5 +104,13 @@ public class Match {
 		} else if (!team2.equals(other.team2))
 			return false;
 		return true;
+	}
+
+	public String getNotificationEmail() {
+		return notificationEmail;
+	}
+
+	public void setNotificationEmail(String notificationEmail) {
+		this.notificationEmail = notificationEmail;
 	}
 }

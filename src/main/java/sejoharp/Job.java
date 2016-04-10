@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Job {
-	
+
 	@Autowired
 	private Config config;
-	
+
 	@Autowired
 	Downloader downloader;
 
@@ -38,15 +38,18 @@ public class Job {
 	public void reportCurrentTime() {
 		System.out.println("The time is now " + dateFormat.format(new Date()));
 
-		List<Match> newMatches = getNewMatches();
-		sendMailForNewMatches(newMatches);
-	}
-
-	private List<Match> getNewMatches() {
 		Document page = downloader.getPage(config.getTournamentUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
 		List<Match> matches = parser.getMatches(runningMatchesSnippet);
-		List<Match> newMatches = findNewMatches(matches, config.getSearchName());
+		List<Match> newMatches = findAllNewMatches(matches);
+		sendMailForNewMatches(newMatches);
+	}
+
+	public List<Match> findAllNewMatches(List<Match> matches) {
+		List<Match> newMatches = findNewMatches(matches,
+				config.getSearchName1(), config.getRecipientaddress1());
+		newMatches.addAll(findNewMatches(matches, config.getSearchName2(),
+				config.getRecipientaddress2()));
 		return newMatches;
 	}
 
@@ -63,16 +66,24 @@ public class Job {
 		});
 	}
 
-	public List<Match> findNewMatches(List<Match> matches, String name) {
-		return matches
-				.stream()
-				.filter(match -> match.getTeam1().contains(name)
-						|| match.getTeam2().contains(name))//
-				.filter(match -> !oldMatches.contains(match))//
-				.collect(Collectors.toList());
+	public List<Match> findNewMatches(List<Match> matches, String name,
+			String email) {
+		List<Match> newMatches = new ArrayList<>();
+		for(Match match : matches){
+			if(!oldMatches.contains(match) && (match.getTeam1().contains(name)
+						|| match.getTeam2().contains(name))){
+				match.setNotificationEmail(email);
+				newMatches.add(match);
+			}
+		}
+		return newMatches;
 	}
 
 	public List<Match> getOldMatches() {
 		return oldMatches;
+	}
+	
+	public void setConfig(Config config){
+		this.config = config;
 	}
 }

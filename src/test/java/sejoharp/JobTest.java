@@ -29,19 +29,59 @@ public class JobTest {
 
 	@Test
 	public void findsNewMatches() throws IOException {
+		Config config = new Config();
+		config.setPassword("password");
+		config.setPort("587");
+		config.setRecipientaddress1("ich@du.de");
+		config.setSearchName1("MyName");
+		config.setSenderaddress("sender@foobar.de");
+		config.setSmtpserver("foobar.de");
+		config.setTournamentUrl("http://foobar.de");
+		config.setUser("emailuser");
+		
 		File testFile = new File(RECOURCES_DIRECTORY + "tournament.html");
-		Document doc = Jsoup.parse(testFile, "UTF-8", "");
+		Document doc = Jsoup.parse(testFile, "ISO-8859-1", "");
 
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		List<Match> newMatches = job.findNewMatches(matches, "Auria");
+		List<Match> newMatches = job.findNewMatches(matches, "Auria",  "ich@du.de");
 		assertThat(newMatches.get(0).getTeam1(), containsString("Auria"));
+		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
 	}
+	
+	@Test
+	public void finds2NewMatches() throws IOException {
+		Config config = new Config();
+		config.setPassword("password");
+		config.setPort("587");
+		config.setSearchName1("Auria");
+		config.setRecipientaddress1("ich@du.de");
+		config.setSearchName2("Arras");
+		config.setRecipientaddress2("ich2@du.de");
+		config.setSenderaddress("sender@foobar.de");
+		config.setSmtpserver("foobar.de");
+		config.setTournamentUrl("http://foobar.de");
+		config.setUser("emailuser");
+		job.setConfig(config);
+		
+		File testFile = new File(RECOURCES_DIRECTORY + "tournament.html");
+		Document doc = Jsoup.parse(testFile, "ISO-8859-1", "");
+
+		Elements elements = parser.getRunningMatchesSnippet(doc);
+		List<Match> matches = parser.getMatches(elements);
+		List<Match> newMatches = job.findAllNewMatches(matches);
+		assertThat(newMatches.get(0).getTeam1(), containsString("Auria"));
+		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
+		assertThat(newMatches.get(1).getTeam1(), containsString("Arras"));
+		assertThat(newMatches.get(1).getNotificationEmail(), is("ich2@du.de"));
+		assertThat(newMatches.size(), is(2));
+	}
+	
 	
 	@Test
 	public void doesNotFindOldMatches() throws IOException {
 		File testFile = new File(RECOURCES_DIRECTORY + "tournament.html");
-		Document doc = Jsoup.parse(testFile, "UTF-8", "");
+		Document doc = Jsoup.parse(testFile, "ISO-8859-1", "");
 
 		Match match = new Match();
 		match.setTableNumber("2");
@@ -53,7 +93,7 @@ public class JobTest {
 		
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		List<Match> newMatches = job.findNewMatches(matches, "Auria");
+		List<Match> newMatches = job.findNewMatches(matches, "Auria", "ich@du.de");
 		assertThat(newMatches.size(), is(0));
 	}
 }

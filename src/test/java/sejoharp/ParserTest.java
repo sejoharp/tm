@@ -25,7 +25,7 @@ public class ParserTest {
     public void setup() throws IOException{
         parser = new Parser();
     	File testFile = new File(RECOURCES_DIRECTORY + "tournament.html");
-    	doc = Jsoup.parse(testFile, "UTF-8", "");
+    	doc = Jsoup.parse(testFile, "ISO-8859-1", "");
     }
 
     @Test
@@ -43,6 +43,13 @@ public class ParserTest {
         assertThat(matches.get(0).getRound(), is("2"));
         assertThat(matches.get(0).getTeam1(), is("Albert Hald-Bjerrum / Peter Toubro"));
         assertThat(matches.get(0).getTeam2(), is("Michael Kunath / Maximilian Hoyer"));
+    }
+
+    @Test
+    public void parseSpecialMatches() throws IOException{
+        Elements elements = parser.getRunningMatchesSnippet(doc);
+        List<Match> matches = parser.getMatches(elements);
+        assertThat(matches.get(2).getTeam1(), is("Etienne Arras / Nikolaus Götz"));
     }
     
     @Test

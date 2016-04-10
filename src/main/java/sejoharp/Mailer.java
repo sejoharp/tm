@@ -19,6 +19,13 @@ public class Mailer {
 	@Autowired
 	Config config;
 
+	public Mailer(Config config) {
+		this.config = config;
+	}
+
+	public Mailer() {
+	};
+
 	public MimeMessage createMessage(Match match) throws MessagingException {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", config.getSmtpserver());
@@ -37,7 +44,7 @@ public class Mailer {
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(config.getSenderaddress()));
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-				config.getRecipientaddress()));
+				match.getNotificationEmail()));
 		message.setSubject(formatSubject(match));
 		message.setText(formatBody(match));
 		return message;
@@ -54,7 +61,7 @@ public class Mailer {
 	}
 
 	public String formatBody(Match match) {
-		return String.format("Tisch:%d\n" + "Disziplin:%s\n" + "Runde:%s\n"
+		return String.format("Tisch:%s\n" + "Disziplin:%s\n" + "Runde:%s\n"
 				+ "Teilnehmer:%s vs. %s", match.getTableNumber(),
 				match.getDisciplin(), match.getRound(), match.getTeam1(),
 				match.getTeam2());
