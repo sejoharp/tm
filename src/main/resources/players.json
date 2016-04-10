@@ -1,0 +1,12 @@
+{
+   "players":[
+      {
+         "name":"Luciano Auria",
+         "email":"la@foobar.de"
+      },
+      {
+         "name":"Benjamin Beintner",
+         "email":"bb@foobar.de"
+      }
+   ]
+}

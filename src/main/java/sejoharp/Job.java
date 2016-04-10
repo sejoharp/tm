@@ -35,11 +35,12 @@ public class Job {
 			"HH:mm:ss");
 
 	@Scheduled(fixedRate = 60000)
-	public void reportCurrentTime() {
+	public void notifyPlayerForNewGames() {
 		System.out.println("The time is now " + dateFormat.format(new Date()));
 
 		List<Match> newMatches = getNewMatches();
-		sendMailForNewMatches(newMatches);
+		List<Player> players = new ArrayList<Player>();
+		sendMailForNewMatches(newMatches, players);
 	}
 
 	private List<Match> getNewMatches() {
@@ -50,7 +51,7 @@ public class Job {
 		return newMatches;
 	}
 
-	private void sendMailForNewMatches(List<Match> newMatches) {
+	private void sendMailForNewMatches(List<Match> newMatches, List<Player> players) {
 		newMatches.stream().forEach(match -> {
 			try {
 				MimeMessage message = mailer.createMessage(match);
