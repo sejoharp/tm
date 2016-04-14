@@ -47,15 +47,7 @@ public class MailSenderTest {
 
 	@Test
 	public void createsMail() throws MessagingException {
-		Config config = new Config();
-		config.setPassword("password");
-		config.setPort("587");
-		config.setRecipientaddress1("ich@du.de");
-		config.setSearchName1("MyName");
-		config.setSenderaddress("sender@foobar.de");
-		config.setSmtpserver("foobar.de");
-		config.setTournamentUrl("http://foobar.de");
-		config.setUser("emailuser");
+		Config config = TestData.getConig();
 		Mailer mailer = new Mailer(config);
 		Match match = new Match();
 		match.setTableNumber("2");

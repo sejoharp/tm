@@ -15,48 +15,6 @@ public class Config {
 	private String password;
 	@Value("${email.senderaddress}")
 	private String senderaddress;
-	@Value("${email.recipientaddress1}")
-	private String recipientaddress1;
-	@Value("${email.recipientaddress2}")
-	private String recipientaddress2;
-	@Value("${tournamentUrl}")
-	private String tournamentUrl;
-	@Value("${searchName1}")
-	private String searchName1;
-	@Value("${searchName2}")
-	private String searchName2;
-
-	public String getRecipientaddress1() {
-		return recipientaddress1;
-	}
-
-	public void setRecipientaddress1(String recipientaddress1) {
-		this.recipientaddress1 = recipientaddress1;
-	}
-
-	public String getRecipientaddress2() {
-		return recipientaddress2;
-	}
-
-	public void setRecipientaddress2(String recipientaddress2) {
-		this.recipientaddress2 = recipientaddress2;
-	}
-
-	public String getSearchName1() {
-		return searchName1;
-	}
-
-	public void setSearchName1(String searchName1) {
-		this.searchName1 = searchName1;
-	}
-
-	public String getSearchName2() {
-		return searchName2;
-	}
-
-	public void setSearchName2(String searchName2) {
-		this.searchName2 = searchName2;
-	}
 
 	public String getSenderaddress() {
 		return senderaddress;
@@ -98,21 +56,10 @@ public class Config {
 		this.port = port;
 	}
 
-	public String getTournamentUrl() {
-		return tournamentUrl;
-	}
-
-	public void setTournamentUrl(String tournamentUrl) {
-		this.tournamentUrl = tournamentUrl;
-	}
-
 	@Override
 	public String toString() {
-		return "Config [port=" + port + ", smtpserver=" + smtpserver
-				+ ", user=" + user + ", senderaddress=" + senderaddress
-				+ ", recipientaddress1=" + recipientaddress1
-				+ ", recipientaddress2=" + recipientaddress2
-				+ ", tournamentUrl=" + tournamentUrl + ", searchName1="
-				+ searchName1 + ", searchName2=" + searchName2 + "]";
+		return "Config [port=" + port + ", smtpserver=" + smtpserver + ", user=" + user + ", password=" + password
+				+ ", senderaddress=" + senderaddress + "]";
 	}
+
 }

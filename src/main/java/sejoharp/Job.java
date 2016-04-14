@@ -1,10 +1,11 @@
 package sejoharp;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.mail.internet.MimeMessage;
 
@@ -14,42 +15,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 @Component
 public class Job {
 
 	@Autowired
-	private Config config;
+	private Downloader downloader;
 
 	@Autowired
-	Downloader downloader;
+	private Parser parser;
 
 	@Autowired
-	Parser parser;
-
-	@Autowired
-	Mailer mailer;
+	private Mailer mailer;
 
 	private List<Match> oldMatches = new ArrayList<Match>();
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-			"HH:mm:ss");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-	@Scheduled(fixedRate = 60000)
-	public void reportCurrentTime() {
+	@Scheduled(initialDelay=30000, fixedRate = 60000)
+	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
 		System.out.println("The time is now " + dateFormat.format(new Date()));
-
-		Document page = downloader.getPage(config.getTournamentUrl());
+		TournamentConfig tournamentConfig = getTournamentConfig();
+		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
 		List<Match> matches = parser.getMatches(runningMatchesSnippet);
-		List<Match> newMatches = findAllNewMatches(matches);
+		List<Match> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
 		sendMailForNewMatches(newMatches);
 	}
 
-	public List<Match> findAllNewMatches(List<Match> matches) {
-		List<Match> newMatches = findNewMatches(matches,
-				config.getSearchName1(), config.getRecipientaddress1());
-		newMatches.addAll(findNewMatches(matches, config.getSearchName2(),
-				config.getRecipientaddress2()));
+	private TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("tournament.json").getFile());
+		return downloader.getTournamentConfig(file);
+	}
+
+	public List<Match> findAllNewMatches(List<Match> matches, List<Player> players) {
+		List<Match> newMatches = new ArrayList<>();
+		for (Player player : players) {
+			newMatches.addAll(findNewMatches(matches, player));
+		}
 		return newMatches;
 	}
 
@@ -58,21 +64,20 @@ public class Job {
 			try {
 				MimeMessage message = mailer.createMessage(match);
 				mailer.send(message);
-				System.out.println("sending mail: " + match);
 				oldMatches.add(match);
+				System.out.println("sending mail: " + match);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
 	}
 
-	public List<Match> findNewMatches(List<Match> matches, String name,
-			String email) {
+	public List<Match> findNewMatches(List<Match> matches, Player player) {
 		List<Match> newMatches = new ArrayList<>();
-		for(Match match : matches){
-			if(!oldMatches.contains(match) && (match.getTeam1().contains(name)
-						|| match.getTeam2().contains(name))){
-				match.setNotificationEmail(email);
+		for (Match match : matches) {
+			if (!oldMatches.contains(match)
+					&& (match.getTeam1().contains(player.getName()) || match.getTeam2().contains(player.getName()))) {
+				match.setNotificationEmail(player.getEmail());
 				newMatches.add(match);
 			}
 		}
@@ -81,9 +86,5 @@ public class Job {
 
 	public List<Match> getOldMatches() {
 		return oldMatches;
-	}
-	
-	public void setConfig(Config config){
-		this.config = config;
 	}
 }

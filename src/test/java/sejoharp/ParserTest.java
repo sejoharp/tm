@@ -18,13 +18,11 @@ public class ParserTest {
     private Parser parser;
     private Document doc;
     
-    public static final String RECOURCES_DIRECTORY = System
-            .getProperty("user.dir") + "/src/test/resources/";
-
     @Before
     public void setup() throws IOException{
         parser = new Parser();
-    	File testFile = new File(RECOURCES_DIRECTORY + "tournament.html");
+		ClassLoader classLoader = getClass().getClassLoader();
+		File testFile = new File(classLoader.getResource("tournament.html").getFile());
     	doc = Jsoup.parse(testFile, "ISO-8859-1", "");
     }
 

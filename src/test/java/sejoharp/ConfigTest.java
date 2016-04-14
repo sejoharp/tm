@@ -21,12 +21,5 @@ public class ConfigTest {
 		assertThat(config.getPort(), is("587"));
 		assertThat(config.getUser(), is("emailuser"));
 		assertThat(config.getPassword(), is("secret"));
-		
-		assertThat(config.getSenderaddress(), is("sender@domain.de"));
-		assertThat(config.getTournamentUrl(), is("http://domain.de"));
-		assertThat(config.getSearchName1(), is("name1"));
-		assertThat(config.getRecipientaddress1(), is("name1@domain.de"));
-		assertThat(config.getSearchName2(), is("name2"));
-		assertThat(config.getRecipientaddress2(), is("name2@domain.de"));
 	}
 }
