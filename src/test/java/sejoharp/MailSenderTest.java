@@ -41,7 +41,7 @@ public class MailSenderTest {
 		match.setTeam1("Aron Schneider / Luciano Auria");
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
 
-		MimeMessage message = mailer.createMessage(match);
+		MimeMessage message = mailer.createMessage(new Notification(match, "ich@du.de"));
 		Transport.send(message);
 	}
 
@@ -55,9 +55,8 @@ public class MailSenderTest {
 		match.setRound("2");
 		match.setTeam1("Aron Schneider / Luciano Auria");
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
-		match.setNotificationEmail("ich@du.de");
 
-		MimeMessage message = mailer.createMessage(match);
+		MimeMessage message = mailer.createMessage(new Notification(match, "ich@du.de"));
 		assertThat(
 				((InternetAddress) message.getRecipients(RecipientType.TO)[0]).getAddress(),
 				is("ich@du.de"));

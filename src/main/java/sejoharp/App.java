@@ -12,7 +12,6 @@ public class App {
     public static void main(String[] args) throws Exception {
     	ApplicationContext app = SpringApplication.run(App.class);
         
-    	Config config = app.getBean(Config.class);
-    	System.out.println("loaded config: " + config);
+    	System.out.println("loaded config: " + app.getBean(Config.class));
     }
 }

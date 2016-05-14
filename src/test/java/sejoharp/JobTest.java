@@ -41,8 +41,8 @@ public class JobTest {
 	public void findsNewMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		List<Match> newMatches = job.findNewMatches(matches, new Player("Auria", "ich@du.de"));
-		assertThat(newMatches.get(0).getTeam1(), containsString("Auria"));
+		List<Notification> newMatches = job.findNewMatches(matches, new Player("Auria", "ich@du.de"));
+		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Auria"));
 		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
 	}
 
@@ -51,10 +51,10 @@ public class JobTest {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
 		List<Player> players = Arrays.asList(new Player("Auria", "ich@du.de"), new Player("Arras", "ich2@du.de"));
-		List<Match> newMatches = job.findAllNewMatches(matches, players);
-		assertThat(newMatches.get(0).getTeam1(), containsString("Auria"));
+		List<Notification> newMatches = job.findAllNewMatches(matches, players);
+		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Auria"));
 		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
-		assertThat(newMatches.get(1).getTeam1(), containsString("Arras"));
+		assertThat(newMatches.get(1).getMatch().getTeam1(), containsString("Arras"));
 		assertThat(newMatches.get(1).getNotificationEmail(), is("ich2@du.de"));
 		assertThat(newMatches.size(), is(2));
 	}

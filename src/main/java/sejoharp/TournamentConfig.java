@@ -60,4 +60,9 @@ public class TournamentConfig {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "TournamentConfig [url=" + url + ", players=" + players + "]";
+	}
 }

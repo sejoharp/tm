@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.internet.MimeMessage;
 
@@ -30,7 +32,7 @@ public class Job {
 	@Autowired
 	private Mailer mailer;
 
-	private List<Match> oldMatches = new ArrayList<Match>();
+	private HashSet<Match> oldMatches = new HashSet<Match>();
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -41,7 +43,7 @@ public class Job {
 		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
 		List<Match> matches = parser.getMatches(runningMatchesSnippet);
-		List<Match> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
+		List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
 		sendMailForNewMatches(newMatches);
 	}
 
@@ -51,40 +53,39 @@ public class Job {
 		return downloader.getTournamentConfig(file);
 	}
 
-	public List<Match> findAllNewMatches(List<Match> matches, List<Player> players) {
-		List<Match> newMatches = new ArrayList<>();
+	public List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
+		List<Notification> allNewMatches = new ArrayList<>();
 		for (Player player : players) {
-			newMatches.addAll(findNewMatches(matches, player));
+			allNewMatches.addAll(findNewMatches(matches, player));
 		}
-		return newMatches;
+		return allNewMatches;
 	}
 
-	private void sendMailForNewMatches(List<Match> newMatches) {
-		newMatches.stream().forEach(match -> {
+	private void sendMailForNewMatches(List<Notification> notifications) {
+		notifications.stream().forEach(notification -> {
 			try {
-				MimeMessage message = mailer.createMessage(match);
+				MimeMessage message = mailer.createMessage(notification);
 				mailer.send(message);
-				oldMatches.add(match);
-				System.out.println("sending mail: " + match);
+				oldMatches.add(notification.getMatch());
+				System.out.println("sending mail: " + notification);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
 	}
 
-	public List<Match> findNewMatches(List<Match> matches, Player player) {
-		List<Match> newMatches = new ArrayList<>();
+	public List<Notification> findNewMatches(List<Match> matches, Player player) {
+		List<Notification> newMatches = new ArrayList<>();
 		for (Match match : matches) {
 			if (!oldMatches.contains(match)
 					&& (match.getTeam1().contains(player.getName()) || match.getTeam2().contains(player.getName()))) {
-				match.setNotificationEmail(player.getEmail());
-				newMatches.add(match);
+				newMatches.add(new Notification(match, player.getEmail()));
 			}
 		}
 		return newMatches;
 	}
 
-	public List<Match> getOldMatches() {
+	public Set<Match> getOldMatches() {
 		return oldMatches;
 	}
 }

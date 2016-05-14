@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,26 +52,29 @@ public class JobMockTest {
 		when(downloader.getPage(anyString())).thenReturn(doc);
 		when(downloader.getTournamentConfig(any(File.class))).thenReturn(TestData.getTournament1PlayerConfig());
 		when(parser.getRunningMatchesSnippet(any(Document.class))).thenReturn(loadRunningMatches());
-		when(mailer.createMessage(any(Match.class))).then(new Answer<MimeMessage>() {
+		when(mailer.createMessage(any(Notification.class))).then(new Answer<MimeMessage>() {
 			@Override
 			public MimeMessage answer(InvocationOnMock invocation) throws Throwable {
-				return new Mailer(TestData.getConig()).createMessage(invocation.getArgumentAt(0, Match.class));
+				return new Mailer(TestData.getConig()).createMessage(invocation.getArgumentAt(0, Notification.class));
 			}
 		});
 	}
 
 	@Test
-	public void findsANewMatch() throws MessagingException, JsonParseException, JsonMappingException, IOException {
+	public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
 		when(parser.getMatches(any(Elements.class))).thenReturn(Arrays.asList(TestData.getMatch()));
+		when(downloader.getTournamentConfig(any(File.class))).thenReturn(TestData.getTournament2PlayersConfig());
 		
 		job.notifyPlayerForNewMatches();
 
 		ArgumentCaptor<MimeMessage> argumentCaptor = ArgumentCaptor.forClass(MimeMessage.class);
-		verify(mailer).send(argumentCaptor.capture());
-		MimeMessage message = argumentCaptor.getValue();
-		String recipientAddress = ((InternetAddress) message.getRecipients(RecipientType.TO)[0])
+		verify(mailer, times(2)).send(argumentCaptor.capture());
+		String recipientAddress = ((InternetAddress) argumentCaptor.getAllValues().get(0).getRecipients(RecipientType.TO)[0])
 				.getAddress();
-		assertThat(recipientAddress, is(TestData.getTournament1PlayerConfig().getPlayers().get(0).getEmail()));
+		String recipientAddress1 = ((InternetAddress) argumentCaptor.getAllValues().get(1).getRecipients(RecipientType.TO)[0])
+				.getAddress();
+		assertThat(recipientAddress, is(TestData.getTournament2PlayersConfig().getPlayers().get(0).getEmail()));
+		assertThat(recipientAddress1, is(TestData.getTournament2PlayersConfig().getPlayers().get(1).getEmail()));
 	}
 
 	@Test

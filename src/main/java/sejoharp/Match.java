@@ -6,7 +6,6 @@ public class Match {
 	private String tableNumber;
 	private String disciplin;
 	private String round;
-	private String notificationEmail;
 
 	public String getTeam1() {
 		return team1;
@@ -49,21 +48,12 @@ public class Match {
 	}
 
 	@Override
-	public String toString() {
-		return "Match [team1=" + team1 + ", team2=" + team2 + ", tableNumber="
-				+ tableNumber + ", disciplin=" + disciplin + ", round=" + round
-				+ "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((disciplin == null) ? 0 : disciplin.hashCode());
+		result = prime * result + ((disciplin == null) ? 0 : disciplin.hashCode());
 		result = prime * result + ((round == null) ? 0 : round.hashCode());
-		result = prime * result
-				+ ((tableNumber == null) ? 0 : tableNumber.hashCode());
+		result = prime * result + ((tableNumber == null) ? 0 : tableNumber.hashCode());
 		result = prime * result + ((team1 == null) ? 0 : team1.hashCode());
 		result = prime * result + ((team2 == null) ? 0 : team2.hashCode());
 		return result;
@@ -106,11 +96,9 @@ public class Match {
 		return true;
 	}
 
-	public String getNotificationEmail() {
-		return notificationEmail;
-	}
-
-	public void setNotificationEmail(String notificationEmail) {
-		this.notificationEmail = notificationEmail;
+	@Override
+	public String toString() {
+		return "Match [team1=" + team1 + ", team2=" + team2 + ", tableNumber=" + tableNumber + ", disciplin="
+				+ disciplin + ", round=" + round + "]";
 	}
 }
