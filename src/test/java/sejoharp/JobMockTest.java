@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -51,9 +52,9 @@ public class JobMockTest {
 		when(downloader.getPage(anyString())).thenReturn(doc);
 		when(downloader.getTournamentConfig(any(File.class))).thenReturn(TestData.getTournament1PlayerConfig());
 		when(parser.getRunningMatchesSnippet(any(Document.class))).thenReturn(loadRunningMatches());
-		when(mailer.createMessage(any(Match.class))).then(new Answer<MimeMessage>() {
+		when(mailer.createMessage(any(Match.class))).then(new Answer<Message>() {
 			@Override
-			public MimeMessage answer(InvocationOnMock invocation) throws Throwable {
+			public Message answer(InvocationOnMock invocation) throws Throwable {
 				return new Mailer(TestData.getConig()).createMessage(invocation.getArgumentAt(0, Match.class));
 			}
 		});

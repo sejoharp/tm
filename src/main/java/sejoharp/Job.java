@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 
 import org.jsoup.nodes.Document;
@@ -62,7 +63,7 @@ public class Job {
 	private void sendMailForNewMatches(List<Match> newMatches) {
 		newMatches.stream().forEach(match -> {
 			try {
-				MimeMessage message = mailer.createMessage(match);
+				Message message = mailer.createMessage(match);
 				mailer.send(message);
 				oldMatches.add(match);
 				System.out.println("sending mail: " + match);

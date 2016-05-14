@@ -26,7 +26,7 @@ public class Mailer {
 	public Mailer() {
 	};
 
-	public MimeMessage createMessage(Match match) throws MessagingException {
+	public Message createMessage(Match match) throws MessagingException {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", config.getSmtpserver());
 		properties.put("mail.smtp.starttls.enable", "true");
@@ -47,7 +47,7 @@ public class Mailer {
 		return message;
 	}
 
-	public void send(MimeMessage message) throws MessagingException {
+	public void send(Message message) throws MessagingException {
 		Transport.send(message);
 	}
 
@@ -59,5 +59,10 @@ public class Mailer {
 	public String formatBody(Match match) {
 		return String.format("Tisch:%s\n" + "Disziplin:%s\n" + "Runde:%s\n" + "Teilnehmer:%s vs. %s",
 				match.getTableNumber(), match.getDisciplin(), match.getRound(), match.getTeam1(), match.getTeam2());
+	}
+
+	public Message send(Match matchWithMail) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

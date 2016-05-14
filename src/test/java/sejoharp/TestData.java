@@ -23,6 +23,18 @@ public class TestData {
 		return match;
 	}
 
+	public static Match getMatchWithMail() {
+		Match match = new Match();
+		match.setTableNumber("2");
+		match.setDisciplin("GD Vorr.");
+		match.setRound("2");
+		match.setTeam1("User1 / User2");
+		match.setTeam2("User3 / User4");
+		match.setNotificationEmail("user1@domain.com");
+		return match;
+	}
+
+	
 	public static Config getConig() {
 		Config config = new Config();
 		config.setPassword("password");
