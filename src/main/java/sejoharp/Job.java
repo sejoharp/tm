@@ -33,16 +33,13 @@ public class Job {
 	@Autowired
 	private Mailer mailer;
 
-	@Autowired
-    private ResourceLoader resourceLoader;
-	
 	private HashSet<Match> oldMatches = new HashSet<Match>();
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Scheduled(initialDelay=30000, fixedRate = 60000)
 	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
-		log.info("nothing to do...");
+		log.info("read matches..");
 		TournamentConfig tournamentConfig = getTournamentConfig();
 		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
@@ -52,8 +49,7 @@ public class Job {
 	}
 
 	private TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
-		InputStream file = resourceLoader.getResource("classpath:tournament.json").getInputStream();
-		return downloader.getTournamentConfig(file);
+		return downloader.getTournamentConfig();
 	}
 
 	public List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
