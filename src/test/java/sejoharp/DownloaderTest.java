@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class DownloaderTest {
 	public void getsTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("tournament.json").getFile());
-		TournamentConfig config = new Downloader().getTournamentConfig(file);
+		TournamentConfig config = new Downloader().getTournamentConfig(new FileInputStream(file));
 
 		assertThat(config, is(TestData.getTournament2PlayersConfig()));
 	}
@@ -24,7 +25,7 @@ public class DownloaderTest {
 	public void getsTournamentConfigWithSpecialCharacters() throws JsonParseException, JsonMappingException, IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("tournament-test.json").getFile());
-		TournamentConfig config = new Downloader().getTournamentConfig(file);
+		TournamentConfig config = new Downloader().getTournamentConfig(new FileInputStream(file));
 
 		assertThat(config.getPlayers().get(0).getName(), is("Userß"));
 	}

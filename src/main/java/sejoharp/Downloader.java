@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 public class Downloader {
@@ -21,7 +22,7 @@ public class Downloader {
 		}
 	}
 
-	public TournamentConfig getTournamentConfig(File file)
+	public TournamentConfig getTournamentConfig(InputStream file)
 			throws JsonParseException, JsonMappingException, IOException {
 		return new ObjectMapper().readValue(file, TournamentConfig.class);
 	}

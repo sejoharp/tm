@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import javax.mail.MessagingException;
@@ -29,6 +31,8 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -43,14 +47,18 @@ public class JobMockTest {
 	private Downloader downloader;
 	@Mock
 	private Parser parser;
+	@Mock 
+	private ResourceLoader resourceLoader;
+	
 	private Document doc;
 
 	@Before
-	public void before() throws IOException, MessagingException {
+	public void before() throws IOException, MessagingException, URISyntaxException {
 		doc = loadTournamentData();
 
+		when(resourceLoader.getResource(anyString())).thenReturn(new PathResource(getClass().getClassLoader().getResource("tournament.html").toURI()));
 		when(downloader.getPage(anyString())).thenReturn(doc);
-		when(downloader.getTournamentConfig(any(File.class))).thenReturn(TestData.getTournament1PlayerConfig());
+		when(downloader.getTournamentConfig(any(InputStream.class))).thenReturn(TestData.getTournament1PlayerConfig());
 		when(parser.getRunningMatchesSnippet(any(Document.class))).thenReturn(loadRunningMatches());
 		when(mailer.createMessage(any(Notification.class))).then(new Answer<MimeMessage>() {
 			@Override
@@ -63,7 +71,7 @@ public class JobMockTest {
 	@Test
 	public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
 		when(parser.getMatches(any(Elements.class))).thenReturn(Arrays.asList(TestData.getMatch()));
-		when(downloader.getTournamentConfig(any(File.class))).thenReturn(TestData.getTournament2PlayersConfig());
+		when(downloader.getTournamentConfig(any(InputStream.class))).thenReturn(TestData.getTournament2PlayersConfig());
 		
 		job.notifyPlayerForNewMatches();
 

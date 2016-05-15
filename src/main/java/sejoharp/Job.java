@@ -1,10 +1,8 @@
 package sejoharp;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +11,10 @@ import javax.mail.internet.MimeMessage;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,13 +33,16 @@ public class Job {
 	@Autowired
 	private Mailer mailer;
 
+	@Autowired
+    private ResourceLoader resourceLoader;
+	
 	private HashSet<Match> oldMatches = new HashSet<Match>();
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Scheduled(initialDelay=30000, fixedRate = 60000)
 	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
-		System.out.println("The time is now " + dateFormat.format(new Date()));
+		log.info("nothing to do...");
 		TournamentConfig tournamentConfig = getTournamentConfig();
 		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
@@ -48,8 +52,7 @@ public class Job {
 	}
 
 	private TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("tournament.json").getFile());
+		InputStream file = resourceLoader.getResource("classpath:tournament.json").getInputStream();
 		return downloader.getTournamentConfig(file);
 	}
 
@@ -67,7 +70,7 @@ public class Job {
 				MimeMessage message = mailer.createMessage(notification);
 				mailer.send(message);
 				oldMatches.add(notification.getMatch());
-				System.out.println("sending mail: " + notification);
+				log.info("sending mail: " + notification);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

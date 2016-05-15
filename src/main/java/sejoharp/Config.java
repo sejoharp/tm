@@ -58,7 +58,7 @@ public class Config {
 
 	@Override
 	public String toString() {
-		return "Config [port=" + port + ", smtpserver=" + smtpserver + ", user=" + user + ", password=" + password.length()
+		return "Config [port=" + port + ", smtpserver=" + smtpserver + ", user=" + user + ", password length=" + password.length()
 				+ ", senderaddress=" + senderaddress + "]";
 	}
 
