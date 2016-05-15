@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
@@ -31,8 +30,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.io.PathResource;
-import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -47,7 +44,7 @@ public class JobMockTest {
 	private Downloader downloader;
 	@Mock
 	private Parser parser;
-	
+
 	private Document doc;
 
 	@Before
@@ -69,15 +66,15 @@ public class JobMockTest {
 	public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
 		when(parser.getMatches(any(Elements.class))).thenReturn(Arrays.asList(TestData.getMatch()));
 		when(downloader.getTournamentConfig()).thenReturn(TestData.getTournament2PlayersConfig());
-		
+
 		job.notifyPlayerForNewMatches();
 
 		ArgumentCaptor<MimeMessage> argumentCaptor = ArgumentCaptor.forClass(MimeMessage.class);
 		verify(mailer, times(2)).send(argumentCaptor.capture());
-		String recipientAddress = ((InternetAddress) argumentCaptor.getAllValues().get(0).getRecipients(RecipientType.TO)[0])
-				.getAddress();
-		String recipientAddress1 = ((InternetAddress) argumentCaptor.getAllValues().get(1).getRecipients(RecipientType.TO)[0])
-				.getAddress();
+		String recipientAddress = ((InternetAddress) argumentCaptor.getAllValues().get(0)
+				.getRecipients(RecipientType.TO)[0]).getAddress();
+		String recipientAddress1 = ((InternetAddress) argumentCaptor.getAllValues().get(1)
+				.getRecipients(RecipientType.TO)[0]).getAddress();
 		assertThat(recipientAddress, is(TestData.getTournament2PlayersConfig().getPlayers().get(0).getEmail()));
 		assertThat(recipientAddress1, is(TestData.getTournament2PlayersConfig().getPlayers().get(1).getEmail()));
 	}
@@ -88,7 +85,7 @@ public class JobMockTest {
 
 		job.notifyPlayerForNewMatches();
 		job.notifyPlayerForNewMatches();
-		
+
 		verify(mailer).send(any(MimeMessage.class));
 	}
 

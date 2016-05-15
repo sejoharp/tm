@@ -11,11 +11,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class App {
 
-    public static void main(String[] args) throws Exception {
-    	ApplicationContext app = SpringApplication.run(App.class);
-        
-    	Logger log = LoggerFactory.getLogger(App.class);
-
-    	log.info("loaded config: " + app.getBean(Config.class));
-    }
+	public static void main(String[] args) throws Exception {
+		ApplicationContext app = SpringApplication.run(App.class);
+		Logger log = LoggerFactory.getLogger(App.class);
+		log.info("loaded config: " + app.getBean(Config.class));
+	}
 }

@@ -3,7 +3,7 @@ package sejoharp;
 public class Notification {
 	private final Match match;
 	private final String notificationEmail;
-	
+
 	public Notification(Match match, String notificationEmail) {
 		this.match = match;
 		this.notificationEmail = notificationEmail;

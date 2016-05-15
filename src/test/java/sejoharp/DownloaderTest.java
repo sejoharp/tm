@@ -19,17 +19,19 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class DownloaderTest {
 	@Autowired
 	private Downloader downloader;
-	
+
 	@Test
 	public void getsTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
 		TournamentConfig config = downloader.getTournamentConfig();
 
 		assertThat(config, is(TestData.getTournament2PlayersConfig()));
 	}
+
 	@Test
-	public void getsTournamentConfigWithSpecialCharacters() throws JsonParseException, JsonMappingException, IOException {
+	public void getsTournamentConfigWithSpecialCharacters()
+			throws JsonParseException, JsonMappingException, IOException {
 		TournamentConfig config = downloader.getTournamentConfig();
 
-		assertThat(config.getPlayers().get(0).getName(), is("Userß"));
+		assertThat(config.getPlayers().get(0).getName(), is("User1"));
 	}
 }

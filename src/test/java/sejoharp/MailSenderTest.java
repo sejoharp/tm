@@ -25,9 +25,8 @@ public class MailSenderTest {
 		match.setTeam1("Aron Schneider / Luciano Auria");
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
 
-		assertThat(
-				mailer.formatSubject(match),
-				is("Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner"));
+		assertThat(mailer.formatSubject(match), is(
+				"Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner"));
 	}
 
 	@Test
@@ -57,8 +56,6 @@ public class MailSenderTest {
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
 
 		MimeMessage message = mailer.createMessage(new Notification(match, "ich@du.de"));
-		assertThat(
-				((InternetAddress) message.getRecipients(RecipientType.TO)[0]).getAddress(),
-				is("ich@du.de"));
+		assertThat(((InternetAddress) message.getRecipients(RecipientType.TO)[0]).getAddress(), is("ich@du.de"));
 	}
 }

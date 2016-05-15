@@ -5,3 +5,4 @@ email:
    password: secret
    senderaddress: sender@domain.de
 
+tournamentConfigPath: src/main/resources/tournament.json

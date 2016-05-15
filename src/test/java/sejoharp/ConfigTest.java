@@ -21,5 +21,7 @@ public class ConfigTest {
 		assertThat(config.getPort(), is("587"));
 		assertThat(config.getUser(), is("emailuser"));
 		assertThat(config.getPassword(), is("secret"));
+		assertThat(config.getSenderaddress(), is("sender@domain.de"));
+		assertThat(config.getTournamentConfigPath(), is("src/main/resources/tournament.json"));
 	}
 }

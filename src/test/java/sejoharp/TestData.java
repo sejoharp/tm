@@ -30,6 +30,7 @@ public class TestData {
 		config.setSenderaddress("sender@foobar.de");
 		config.setSmtpserver("foobar.de");
 		config.setUser("emailuser");
+		config.setTournamentConfigPath("src/main/resources/tournament.json");
 		return config;
 	}
 }

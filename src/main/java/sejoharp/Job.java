@@ -1,7 +1,6 @@
 package sejoharp;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -37,16 +36,12 @@ public class Job {
 	@Scheduled(initialDelay = 30000, fixedRate = 60000)
 	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
 		log.info("read matches..");
-		TournamentConfig tournamentConfig = getTournamentConfig();
+		TournamentConfig tournamentConfig = downloader.getTournamentConfig();
 		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
 		List<Match> matches = parser.getMatches(runningMatchesSnippet);
 		List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
 		sendMailForNewMatches(newMatches);
-	}
-
-	private TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
-		return downloader.getTournamentConfig();
 	}
 
 	public List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
