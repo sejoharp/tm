@@ -1,20 +1,17 @@
 package sejoharp;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.mail.internet.MimeMessage;
+import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +34,7 @@ public class Job {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Scheduled(initialDelay=30000, fixedRate = 60000)
+	@Scheduled(initialDelay = 30000, fixedRate = 60000)
 	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
 		log.info("read matches..");
 		TournamentConfig tournamentConfig = getTournamentConfig();
@@ -53,18 +50,16 @@ public class Job {
 	}
 
 	public List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
-		List<Notification> allNewMatches = new ArrayList<>();
-		for (Player player : players) {
-			allNewMatches.addAll(findNewMatches(matches, player));
-		}
-		return allNewMatches;
+		return players.stream()//
+				.map(player -> findNewMatches(matches, player))//
+				.flatMap(Collection::stream)//
+				.collect(Collectors.toList());
 	}
 
 	private void sendMailForNewMatches(List<Notification> notifications) {
 		notifications.stream().forEach(notification -> {
 			try {
-				MimeMessage message = mailer.createMessage(notification);
-				mailer.send(message);
+				mailer.send(mailer.createMessage(notification));
 				oldMatches.add(notification.getMatch());
 				log.info("sending mail: " + notification);
 			} catch (Exception e) {
@@ -74,17 +69,14 @@ public class Job {
 	}
 
 	public List<Notification> findNewMatches(List<Match> matches, Player player) {
-		List<Notification> newMatches = new ArrayList<>();
-		for (Match match : matches) {
-			if (!oldMatches.contains(match)
-					&& (match.getTeam1().contains(player.getName()) || match.getTeam2().contains(player.getName()))) {
-				newMatches.add(new Notification(match, player.getEmail()));
-			}
-		}
-		return newMatches;
+		return matches.stream()//
+				.filter(match -> notifyPlayer(player, match))//
+				.map(match -> new Notification(match, player.getEmail()))//
+				.collect(Collectors.toList());
 	}
 
-	public Set<Match> getOldMatches() {
-		return oldMatches;
+	private boolean notifyPlayer(Player player, Match match) {
+		return !oldMatches.contains(match)
+				&& (match.getTeam1().contains(player.getName()) || match.getTeam2().contains(player.getName()));
 	}
 }
