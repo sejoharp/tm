@@ -19,23 +19,25 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 @Component
 public class Job {
-
-	@Autowired
-	private Downloader downloader;
-
-	@Autowired
-	private Parser parser;
-
-	@Autowired
-	private Mailer mailer;
+	private final Downloader downloader;
+	private final Parser parser;
+	private final Mailer mailer;
 
 	private HashSet<Match> oldMatches = new HashSet<Match>();
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(Job.class);
+
+	@Autowired	
+	public Job(Downloader downloader, Parser parser, Mailer mailer) {
+		super();
+		this.downloader = downloader;
+		this.parser = parser;
+		this.mailer = mailer;
+	}
 
 	@Scheduled(initialDelay = 30000, fixedRate = 60000)
 	public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
-		log.info("read matches..");
+		log.info("reading matches..");
 		TournamentConfig tournamentConfig = downloader.getTournamentConfig();
 		Document page = downloader.getPage(tournamentConfig.getUrl());
 		Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);

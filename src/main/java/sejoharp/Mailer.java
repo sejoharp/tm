@@ -15,16 +15,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Mailer {
+	private final Config config;
 
 	@Autowired
-	Config config;
-
 	public Mailer(Config config) {
 		this.config = config;
 	}
-
-	public Mailer() {
-	};
 
 	public MimeMessage createMessage(Notification notification) throws MessagingException {
 		Properties properties = new Properties();

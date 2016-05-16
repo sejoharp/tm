@@ -1,31 +1,24 @@
 package sejoharp;
 
-public class Player {
-	private String name;
-	private String email;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	public Player(String name, String email) {
+public class Player {
+	private final String name;
+	private final String email;
+
+	@JsonCreator
+	public Player(@JsonProperty("name") String name, @JsonProperty("email") String email) {
 		this.name = name;
 		this.email = email;
-	}
-
-	public Player() {
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override

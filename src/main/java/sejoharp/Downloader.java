@@ -14,8 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class Downloader {
+	private final Config config;
+
 	@Autowired
-	private Config config;
+	public Downloader(Config conig) {
+		this.config = conig;
+	}
 
 	public Document getPage(String url) {
 		try {
