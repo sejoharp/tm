@@ -37,7 +37,7 @@ public class Job {
         this.mailer = mailer;
     }
 
-    @Scheduled(initialDelay = 30000, fixedRate = 30000)
+    @Scheduled(initialDelay = 10000, fixedRate = 10000)
     void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         log.info("reading matches..");
         TournamentConfig tournamentConfig = downloader.getTournamentConfig();
