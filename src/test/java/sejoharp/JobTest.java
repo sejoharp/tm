@@ -91,14 +91,14 @@ public class JobTest {
 
 	private Document loadTournamentData() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("tournament.html").getFile());
-		return Jsoup.parse(file, "ISO-8859-1");
+		File file = new File(classLoader.getResource("tournament2.html").getFile());
+		return Jsoup.parse(file, "utf-8");
 	}
 
 	private Elements loadRunningMatches() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("runningMatchesSnippet.html").getFile());
-		return Jsoup.parse(file, "ISO-8859-1").siblingElements();
+		return Jsoup.parse(file, "utf-8").siblingElements();
 	}
 
 }

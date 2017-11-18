@@ -123,7 +123,7 @@ public class Config {
 
 	@Override
 	public String toString() {
-		return "Config [port=" + port + ", smtpserver=" + smtpserver + ", user=" + user + ", password=" + password
+		return "Config [port=" + port + ", smtpserver=" + smtpserver + ", user=" + user + ", password=" + (!password.equals("secret") ? "set" : "not set")
 				+ ", senderaddress=" + senderaddress + ", tournamentConfigPath=" + tournamentConfigPath + "]";
 	}
 }

@@ -2,6 +2,7 @@ package sejoharp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static sejoharp.Notification.notification;
 
 import javax.mail.MessagingException;
 import javax.mail.Transport;
@@ -40,7 +41,7 @@ public class MailSenderTest {
 		match.setTeam1("Aron Schneider / Luciano Auria");
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
 
-		MimeMessage message = mailer.createMessage(new Notification(match, "ich@du.de"));
+		MimeMessage message = mailer.createMessage(notification(match, "ich@du.de"));
 		Transport.send(message);
 	}
 
@@ -54,7 +55,7 @@ public class MailSenderTest {
 		match.setTeam1("Aron Schneider / Luciano Auria");
 		match.setTeam2("Sophia Becker / Benjamin Beintner");
 
-		MimeMessage message = mailer.createMessage(new Notification(match, "ich@du.de"));
+		MimeMessage message = mailer.createMessage(notification(match, "ich@du.de"));
 		assertThat(((InternetAddress) message.getRecipients(RecipientType.TO)[0]).getAddress(), is("ich@du.de"));
 	}
 }

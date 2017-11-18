@@ -23,8 +23,8 @@ public class ITJobTest {
 	@Before
 	public void setup() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("tournament.html").getFile());
-		doc = Jsoup.parse(file, "ISO-8859-1", "");
+		File file = new File(classLoader.getResource("tournament2.html").getFile());
+		doc = Jsoup.parse(file, "utf-8", "");
 
 		parser = new Parser();
 		job = new Job(null, parser, null);
@@ -34,8 +34,8 @@ public class ITJobTest {
 	public void findsNewMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		List<Notification> newMatches = job.findNewMatches(matches, new Player("Auria", "ich@du.de"));
-		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Auria"));
+		List<Notification> newMatches = job.findNewMatches(matches, new Player("Reimer", "ich@du.de"));
+		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
 		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
 	}
 
@@ -43,11 +43,11 @@ public class ITJobTest {
 	public void finds2NewMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		List<Player> players = Arrays.asList(new Player("Auria", "ich@du.de"), new Player("Arras", "ich2@du.de"));
+		List<Player> players = Arrays.asList(new Player("Reimer", "ich@du.de"), new Player("Borck", "ich2@du.de"));
 		List<Notification> newMatches = job.findAllNewMatches(matches, players);
-		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Auria"));
+		assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
 		assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
-		assertThat(newMatches.get(1).getMatch().getTeam1(), containsString("Arras"));
+		assertThat(newMatches.get(1).getMatch().getTeam1(), containsString("Borck"));
 		assertThat(newMatches.get(1).getNotificationEmail(), is("ich2@du.de"));
 		assertThat(newMatches.size(), is(2));
 	}

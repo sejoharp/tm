@@ -21,32 +21,32 @@ public class ParserTest {
 	public void setup() throws IOException {
 		parser = new Parser();
 		ClassLoader classLoader = getClass().getClassLoader();
-		File testFile = new File(classLoader.getResource("tournament.html").getFile());
-		doc = Jsoup.parse(testFile, "ISO-8859-1", "");
+		File testFile = new File(classLoader.getResource("tournament2.html").getFile());
+		doc = Jsoup.parse(testFile, "utf-8", "");
 	}
 
 	@Test
 	public void getsRunningMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
-		assertThat(elements.size(), is(39));
+		assertThat(elements.size(), is(8));
 	}
 
 	@Test
-	public void parseMatches() throws IOException {
+	public void parsesMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
 		assertThat(matches.get(0).getTableNumber(), is("1"));
-		assertThat(matches.get(0).getDisciplin(), is("GD Vorr."));
-		assertThat(matches.get(0).getRound(), is("2"));
-		assertThat(matches.get(0).getTeam1(), is("Albert Hald-Bjerrum / Peter Toubro"));
-		assertThat(matches.get(0).getTeam2(), is("Michael Kunath / Maximilian Hoyer"));
+		assertThat(matches.get(0).getDisciplin(), is("MD Profi"));
+		assertThat(matches.get(0).getRound(), is("1/8"));
+		assertThat(matches.get(0).getTeam1(), is("Mia Reimer / Arne Borck"));
+		assertThat(matches.get(0).getTeam2(), is("Michael Strauß / Petra Andres"));
 	}
 
 	@Test
 	public void parseSpecialMatches() throws IOException {
 		Elements elements = parser.getRunningMatchesSnippet(doc);
 		List<Match> matches = parser.getMatches(elements);
-		assertThat(matches.get(2).getTeam1(), is("Etienne Arras / Nikolaus Götz"));
+		assertThat(matches.get(2).getTeam1(), is("Niclas Grote / Mona Brandt"));
 	}
 
 	@Test

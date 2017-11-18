@@ -4,6 +4,10 @@ public class Notification {
 	private final Match match;
 	private final String notificationEmail;
 
+	public static Notification notification(Match match, String notificationEmail){
+		return new Notification(match, notificationEmail);
+
+	}
 	public Notification(Match match, String notificationEmail) {
 		this.match = match;
 		this.notificationEmail = notificationEmail;
