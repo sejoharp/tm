@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static sejoharp.Notification.notification;
 
 @Component
@@ -37,7 +38,7 @@ public class Job {
     }
 
     @Scheduled(initialDelay = 30000, fixedRate = 30000)
-    public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
+    void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         log.info("reading matches..");
         TournamentConfig tournamentConfig = downloader.getTournamentConfig();
         Document page = downloader.getPage(tournamentConfig.getUrl());
@@ -47,11 +48,11 @@ public class Job {
         sendMailForNewMatches(newMatches);
     }
 
-    public List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
+    List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
         return players.stream()
                 .map(player -> findNewMatches(matches, player))
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private void sendMailForNewMatches(List<Notification> notifications) {
@@ -70,7 +71,7 @@ public class Job {
         return matches.stream()
                 .filter(match -> notifyPlayer(player, match))
                 .map(match -> notification(match, player.getEmail()))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private boolean notifyPlayer(Player player, Match match) {

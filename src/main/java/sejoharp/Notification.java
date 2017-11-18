@@ -8,7 +8,7 @@ public class Notification {
 		return new Notification(match, notificationEmail);
 
 	}
-	public Notification(Match match, String notificationEmail) {
+	private Notification(Match match, String notificationEmail) {
 		this.match = match;
 		this.notificationEmail = notificationEmail;
 	}

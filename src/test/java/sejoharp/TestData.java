@@ -1,19 +1,31 @@
 package sejoharp;
 
 import java.util.Arrays;
+import java.util.Collections;
 
-public class TestData {
-	public static TournamentConfig getTournament1PlayerConfig() {
-		return new TournamentConfig("http://tournament.com/tour",
-				Arrays.asList(new Player("User1", "user1@domain.com")));
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static sejoharp.TournamentConfig.tournamentConfig;
+
+class TestData {
+	static TournamentConfig getTournament1PlayerConfig() {
+		return tournamentConfig("http://tournament.com/tour",
+                singletonList(new Player("User1", "user1@domain.com")));
 	}
 
-	public static TournamentConfig getTournament2PlayersConfig() {
-		return new TournamentConfig("http://tournament.com/tour",
-				Arrays.asList(new Player("User1", "user1@domain.com"), new Player("User2", "user2@domain.com")));
+	static TournamentConfig getTournament2PlayersConfig() {
+		return TournamentConfig.tournamentConfig("http://tournament.com/tour",
+				asList(new Player("User1", "user1@domain.com"),
+                        new Player("User2", "user2@domain.com")));
 	}
 
-	public static Match getMatch() {
+	static TournamentConfig getTournament2PlayersConfig2() {
+		return TournamentConfig.tournamentConfig("http://tournament.com/tour",
+				asList(new Player("Userß", "user1@domain.com"),
+                        new Player("User2", "user2@domain.com")));
+	}
+
+	static Match getMatch() {
 		Match match = new Match();
 		match.setTableNumber("2");
 		match.setDisciplin("GD Vorr.");
@@ -23,14 +35,14 @@ public class TestData {
 		return match;
 	}
 
-	public static Config getConig() {
+	static Config getConig() {
 		Config config = new Config();
 		config.setPassword("password");
 		config.setPort("587");
 		config.setSenderaddress("sender@foobar.de");
 		config.setSmtpserver("foobar.de");
 		config.setUser("emailuser");
-		config.setTournamentConfigPath("src/main/resources/tournament.json");
+		config.setTournamentConfigPath("src/test/resources/tournament-test.json");
 		return config;
 	}
 }

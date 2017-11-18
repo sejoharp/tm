@@ -17,15 +17,6 @@ public class DownloaderTest {
 		Downloader downloader = new Downloader(TestData.getConig());
 		TournamentConfig config = downloader.getTournamentConfig();
 
-		assertThat(config, is(TestData.getTournament2PlayersConfig()));
-	}
-
-	@Test
-	public void getsTournamentConfigWithSpecialCharacters()
-			throws JsonParseException, JsonMappingException, IOException {
-		Downloader downloader = new Downloader(TestData.getConig());
-		TournamentConfig config = downloader.getTournamentConfig();
-
-		assertThat(config.getPlayers().get(0).getName(), is("User1"));
+		assertThat(config, is(TestData.getTournament2PlayersConfig2()));
 	}
 }

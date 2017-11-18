@@ -30,7 +30,8 @@ public class Downloader {
 	}
 
 	public TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(new File(config.getTournamentConfigPath()), TournamentConfig.class);
+		File configFile = new File(config.getTournamentConfigPath());
+		return new ObjectMapper().readValue(configFile, TournamentConfig.class);
 	}
 
 }

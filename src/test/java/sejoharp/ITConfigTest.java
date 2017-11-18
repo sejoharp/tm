@@ -22,6 +22,6 @@ public class ITConfigTest {
 		assertThat(config.getUser(), is("emailuser"));
 		assertThat(config.getPassword(), is("secret"));
 		assertThat(config.getSenderaddress(), is("sender@domain.de"));
-		assertThat(config.getTournamentConfigPath(), is("src/main/resources/tournament.json"));
+		assertThat(config.getTournamentConfigPath(), is("src/test/resources/tournament-test.json"));
 	}
 }

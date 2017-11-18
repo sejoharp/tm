@@ -1,0 +1,8 @@
+email:
+   smtpserver: smtp.domain.de
+   port: 587
+   user: emailuser
+   password: secret
+   senderaddress: sender@domain.de
+
+tournamentConfigPath: src/test/resources/tournament-test.json
