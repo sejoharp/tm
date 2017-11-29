@@ -2,6 +2,8 @@ package sejoharp;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static sejoharp.Config.emptyConfig;
+import static sejoharp.Match.emptyMatch;
 import static sejoharp.Player.createPlayer;
 import static sejoharp.TournamentConfig.tournamentConfig;
 
@@ -25,24 +27,22 @@ class TestData {
     }
 
     static Match getMatch() {
-        Match match = new Match();
-        match.setTableNumber("2");
-        match.setDisciplin("GD Vorr.");
-        match.setRound("2");
-        match.setTeam1("User1 / User2");
-        match.setTeam2("User3 / User4");
-        return match;
+        return emptyMatch()
+                .withTableNumber("2")
+                .withDiscipline("GD Vorr.")
+                .withRound("2")
+                .withTeam1("User1 / User2")
+                .withTeam2("User3 / User4");
     }
 
     static Config getConfig() {
-        Config config = new Config();
-        config.setPassword("password");
-        config.setPort("587");
-        config.setSenderaddress("sender@foobar.de");
-        config.setSmtpserver("foobar.de");
-        config.setUser("emailuser");
-        config.setTournamentConfigPath("src/test/resources/tournament-test.json");
-//		config.setTelegramToken("123:mytoken");
-        return config;
+        return emptyConfig()
+                .withPassword("password")
+                .withPort("587")
+                .withSenderaddress("sender@foobar.de")
+                .withSmtpserver("foobar.de")
+                .withUser("emailuser")
+                .withTournamentConfigPath("src/test/resources/tournament-test.json")
+                .withTelegramToken("123:mytoken");
     }
 }

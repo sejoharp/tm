@@ -9,11 +9,11 @@ import java.io.IOException;
 @Component
 public class PageReaderImpl implements PageReader {
 
-    public static PageReaderImpl pageReader() {
-        return new PageReaderImpl();
+    private PageReaderImpl() {
     }
 
-    private PageReaderImpl() {
+    public static PageReaderImpl pageReader() {
+        return new PageReaderImpl();
     }
 
     @Override

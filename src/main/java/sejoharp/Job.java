@@ -20,14 +20,12 @@ import static sejoharp.EmailNotification.notification;
 
 @Component
 public class Job {
+    private static final Logger log = LoggerFactory.getLogger(Job.class);
     private final TournamentConfigReader tournamentConfigReader;
     private final Parser parser;
     private final Mailer mailer;
     private final PageReader pageReader;
-
     private HashSet<Match> sentNotifications = new HashSet<>();
-
-    private static final Logger log = LoggerFactory.getLogger(Job.class);
 
     @Autowired
     public Job(TournamentConfigReader tournamentConfigReader,

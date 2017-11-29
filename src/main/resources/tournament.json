@@ -1,13 +1,13 @@
 {
-   "url":"http://tournament.com/tour",
-   "players":[
-      {
-         "name":"User1",
-         "email":"user1@domain.com"
-      },
-      {
-         "name":"User2",
-         "email":"user2@domain.com"
-      }
-   ]
+  "url": "http://tournament.com/tour",
+  "players": [
+    {
+      "name": "User1",
+      "email": "user1@domain.com"
+    },
+    {
+      "name": "User2",
+      "email": "user2@domain.com"
+    }
+  ]
 }

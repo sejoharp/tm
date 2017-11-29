@@ -11,10 +11,6 @@ public class Player {
     private final String chatId;
 
 
-    public static Player createPlayer(String name, String email, String chatId) {
-        return new Player(name, email, chatId);
-    }
-    
     @JsonCreator
     public Player(@JsonProperty("name") String name,
                   @JsonProperty("email") String email,
@@ -22,6 +18,10 @@ public class Player {
         this.name = name;
         this.email = email;
         this.chatId = chatId;
+    }
+
+    public static Player createPlayer(String name, String email, String chatId) {
+        return new Player(name, email, chatId);
     }
 
     public String getEmail() {

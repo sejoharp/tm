@@ -6,16 +6,16 @@ public class TournamentConfig {
     private String url;
     private List<Player> players;
 
-    public static TournamentConfig tournamentConfig(String url, List<Player> players) {
-        return new TournamentConfig(url, players);
-    }
-
     private TournamentConfig(String url, List<Player> players) {
         this.url = url;
         this.players = players;
     }
 
     private TournamentConfig() {
+    }
+
+    public static TournamentConfig tournamentConfig(String url, List<Player> players) {
+        return new TournamentConfig(url, players);
     }
 
     public List<Player> getPlayers() {
