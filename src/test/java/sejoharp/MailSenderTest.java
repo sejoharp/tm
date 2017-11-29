@@ -33,7 +33,7 @@ public class MailSenderTest {
 	@Test
 	@Ignore
 	public void sendsMail() throws MessagingException {
-		Mailer mailer = new Mailer(TestData.getConig());
+		Mailer mailer = new Mailer(TestData.getConfig());
 		Match match = new Match();
 		match.setTableNumber("2");
 		match.setDisciplin("GD Vorr.");
@@ -47,7 +47,7 @@ public class MailSenderTest {
 
 	@Test
 	public void createsMail() throws MessagingException {
-		Mailer mailer = new Mailer(TestData.getConig());
+		Mailer mailer = new Mailer(TestData.getConfig());
 		Match match = new Match();
 		match.setTableNumber("2");
 		match.setDisciplin("GD Vorr.");

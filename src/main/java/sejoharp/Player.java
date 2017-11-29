@@ -3,57 +3,60 @@ package sejoharp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class Player {
-	private final String name;
-	private final String email;
+    private final String name;
+    private final String email;
+    private final String chatId;
 
-	@JsonCreator
-	public Player(@JsonProperty("name") String name, @JsonProperty("email") String email) {
-		this.name = name;
-		this.email = email;
-	}
 
-	public String getEmail() {
-		return email;
-	}
+    public static Player createPlayer(String name, String email, String chatId) {
+        return new Player(name, email, chatId);
+    }
+    
+    @JsonCreator
+    public Player(@JsonProperty("name") String name,
+                  @JsonProperty("email") String email,
+                  @JsonProperty("chatId") String chatId) {
+        this.name = name;
+        this.email = email;
+        this.chatId = chatId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Player other = (Player) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
+    public String getChatId() {
+        return chatId;
+    }
 
-	@Override
-	public String toString() {
-		return "Player [name=" + name + ", email=" + email + "]";
-	}
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", chatId='" + chatId + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return Objects.equals(name, player.name) &&
+                Objects.equals(email, player.email) &&
+                Objects.equals(chatId, player.chatId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, email, chatId);
+    }
 }

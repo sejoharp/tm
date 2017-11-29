@@ -1,13 +1,15 @@
 {
-   "url":"http://tournament.com/tour",
-   "players":[
-      {
-         "name":"Userß",
-         "email":"user1@domain.com"
-      },
-      {
-         "name":"User2",
-         "email":"user2@domain.com"
-      }
-   ]
+  "url": "http://tournament.com/tour",
+  "players": [
+    {
+      "name": "Userß",
+      "email": "user1@domain.com",
+      "chatId": "1"
+    },
+    {
+      "name": "User2",
+      "email": "user2@domain.com",
+      "chatId": "2"
+    }
+  ]
 }

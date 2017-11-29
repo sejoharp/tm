@@ -14,34 +14,37 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static sejoharp.Notification.notification;
 
 @Component
 public class Job {
-    private final Downloader downloader;
+    private final TournamentConfigReader tournamentConfigReader;
     private final Parser parser;
     private final Mailer mailer;
+    private final PageReader pageReader;
 
     private HashSet<Match> oldMatches = new HashSet<Match>();
 
     private static final Logger log = LoggerFactory.getLogger(Job.class);
 
     @Autowired
-    public Job(Downloader downloader, Parser parser, Mailer mailer) {
-        super();
-        this.downloader = downloader;
+    public Job(TournamentConfigReader tournamentConfigReader,
+               Parser parser,
+               Mailer mailer,
+               PageReader pageReader) {
+        this.tournamentConfigReader = tournamentConfigReader;
         this.parser = parser;
         this.mailer = mailer;
+        this.pageReader = pageReader;
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)
     void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         log.info("reading matches..");
-        TournamentConfig tournamentConfig = downloader.getTournamentConfig();
-        Document page = downloader.getPage(tournamentConfig.getUrl());
+        TournamentConfig tournamentConfig = tournamentConfigReader.getTournamentConfig();
+        Document page = pageReader.getPage(tournamentConfig.getUrl());
         Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
         List<Match> matches = parser.getMatches(runningMatchesSnippet);
         List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());

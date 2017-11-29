@@ -41,7 +41,9 @@ public class JobTest {
 	@Mock
 	private Mailer mailer;
 	@Mock
-	private Downloader downloader;
+	private PageReader pageReader;
+	@Mock
+	private TournamentConfigReader tournamentConfigReader;
 	@Mock
 	private Parser parser;
 
@@ -51,13 +53,13 @@ public class JobTest {
 	public void before() throws IOException, MessagingException, URISyntaxException {
 		doc = loadTournamentData();
 
-		when(downloader.getPage(anyString())).thenReturn(doc);
-		when(downloader.getTournamentConfig()).thenReturn(TestData.getTournament1PlayerConfig());
+		when(pageReader.getPage(anyString())).thenReturn(doc);
+		when(tournamentConfigReader.getTournamentConfig()).thenReturn(TestData.getTournament1PlayerConfig());
 		when(parser.getRunningMatchesSnippet(any(Document.class))).thenReturn(loadRunningMatches());
 		when(mailer.createMessage(any(Notification.class))).then(new Answer<MimeMessage>() {
 			@Override
 			public MimeMessage answer(InvocationOnMock invocation) throws Throwable {
-				return new Mailer(TestData.getConig()).createMessage(invocation.getArgumentAt(0, Notification.class));
+				return new Mailer(TestData.getConfig()).createMessage(invocation.getArgumentAt(0, Notification.class));
 			}
 		});
 	}
@@ -65,7 +67,7 @@ public class JobTest {
 	@Test
 	public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
 		when(parser.getMatches(any(Elements.class))).thenReturn(Arrays.asList(TestData.getMatch()));
-		when(downloader.getTournamentConfig()).thenReturn(TestData.getTournament2PlayersConfig());
+		when(tournamentConfigReader.getTournamentConfig()).thenReturn(TestData.getTournament2PlayersConfig());
 
 		job.notifyPlayerForNewMatches();
 

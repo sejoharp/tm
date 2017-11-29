@@ -6,3 +6,5 @@ email:
    senderaddress: sender@domain.de
 
 tournamentConfigPath: src/test/resources/tournament-test.json
+
+telegramToken: 123:mytoken

@@ -15,23 +15,15 @@ public class TournamentConfig {
         this.players = players;
     }
 
-    public TournamentConfig() {
+    private TournamentConfig() {
     }
 
     public List<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
     public String getUrl() {
         return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     @Override
