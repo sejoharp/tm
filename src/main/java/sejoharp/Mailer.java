@@ -22,7 +22,7 @@ public class Mailer {
 		this.config = config;
 	}
 
-	public MimeMessage createMessage(Notification notification) throws MessagingException {
+	public MimeMessage createMessage(EmailNotification emailNotification) throws MessagingException {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", config.getSmtpserver());
 		properties.put("mail.smtp.starttls.enable", "true");
@@ -37,9 +37,9 @@ public class Mailer {
 
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(config.getSenderaddress()));
-		message.addRecipient(Message.RecipientType.TO, new InternetAddress(notification.getNotificationEmail()));
-		message.setSubject(formatSubject(notification.getMatch()));
-		message.setText(formatBody(notification.getMatch()));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailNotification.getNotificationEmail()));
+		message.setSubject(formatSubject(emailNotification.getMatch()));
+		message.setText(formatBody(emailNotification.getMatch()));
 		return message;
 	}
 
@@ -47,12 +47,12 @@ public class Mailer {
 		Transport.send(message);
 	}
 
-	public String formatSubject(Match match) {
+	String formatSubject(Match match) {
 		return String.format("Tisch:%s | Disziplin:%s | Runde:%s | %s vs. %s", match.getTableNumber(),
 				match.getDisciplin(), match.getRound(), match.getTeam1(), match.getTeam2());
 	}
 
-	public String formatBody(Match match) {
+	private String formatBody(Match match) {
 		return String.format("Tisch:%s\n" + "Disziplin:%s\n" + "Runde:%s\n" + "Teilnehmer:%s vs. %s",
 				match.getTableNumber(), match.getDisciplin(), match.getRound(), match.getTeam1(), match.getTeam2());
 	}

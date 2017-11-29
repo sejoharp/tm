@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static sejoharp.Notification.notification;
+import static sejoharp.EmailNotification.notification;
 
 @Component
 public class Job {
@@ -47,19 +47,19 @@ public class Job {
         Document page = pageReader.getPage(tournamentConfig.getUrl());
         Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
         List<Match> matches = parser.getMatches(runningMatchesSnippet);
-        List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
+        List<EmailNotification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
         sendMailForNewMatches(newMatches);
     }
 
-    List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
+    List<EmailNotification> findAllNewMatches(List<Match> matches, List<Player> players) {
         return players.stream()
                 .map(player -> findNewMatches(matches, player))
                 .flatMap(Collection::stream)
                 .collect(toList());
     }
 
-    private void sendMailForNewMatches(List<Notification> notifications) {
-        notifications.forEach(notification -> {
+    private void sendMailForNewMatches(List<EmailNotification> emailNotifications) {
+        emailNotifications.forEach(notification -> {
             try {
                 mailer.send(mailer.createMessage(notification));
                 sentNotifications.add(notification.getMatch());
@@ -70,7 +70,7 @@ public class Job {
         });
     }
 
-    List<Notification> findNewMatches(List<Match> matches, Player player) {
+    List<EmailNotification> findNewMatches(List<Match> matches, Player player) {
         return matches.stream()
                 .filter(match -> containsRegisteredPlayer(player, match))
                 .filter(this::isNewNotification)

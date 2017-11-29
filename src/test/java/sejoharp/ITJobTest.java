@@ -14,7 +14,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
-import static sejoharp.PageReaderImpl.pageReader;
 import static sejoharp.Player.createPlayer;
 
 public class ITJobTest {
@@ -40,7 +39,7 @@ public class ITJobTest {
         List<Match> matches = parser.getMatches(elements);
 
         // when
-        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
+        List<EmailNotification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
@@ -57,7 +56,7 @@ public class ITJobTest {
                 createPlayer("Borck", "ich2@du.de", "2"));
 
         // when
-        List<Notification> newMatches = job.findAllNewMatches(matches, players);
+        List<EmailNotification> newMatches = job.findAllNewMatches(matches, players);
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));

@@ -1,14 +1,14 @@
 package sejoharp;
 
-public class Notification {
+public class EmailNotification {
 	private final Match match;
 	private final String notificationEmail;
 
-	public static Notification notification(Match match, String notificationEmail){
-		return new Notification(match, notificationEmail);
+	public static EmailNotification notification(Match match, String notificationEmail){
+		return new EmailNotification(match, notificationEmail);
 
 	}
-	private Notification(Match match, String notificationEmail) {
+	private EmailNotification(Match match, String notificationEmail) {
 		this.match = match;
 		this.notificationEmail = notificationEmail;
 	}
@@ -38,7 +38,7 @@ public class Notification {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Notification other = (Notification) obj;
+		EmailNotification other = (EmailNotification) obj;
 		if (match == null) {
 			if (other.match != null)
 				return false;
@@ -54,6 +54,6 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [match=" + match + ", notificationEmail=" + notificationEmail + "]";
+		return "EmailNotification [match=" + match + ", notificationEmail=" + notificationEmail + "]";
 	}
 }

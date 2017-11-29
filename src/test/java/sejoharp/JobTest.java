@@ -56,10 +56,10 @@ public class JobTest {
 		when(pageReader.getPage(anyString())).thenReturn(doc);
 		when(tournamentConfigReader.getTournamentConfig()).thenReturn(TestData.getTournament1PlayerConfig());
 		when(parser.getRunningMatchesSnippet(any(Document.class))).thenReturn(loadRunningMatches());
-		when(mailer.createMessage(any(Notification.class))).then(new Answer<MimeMessage>() {
+		when(mailer.createMessage(any(EmailNotification.class))).then(new Answer<MimeMessage>() {
 			@Override
 			public MimeMessage answer(InvocationOnMock invocation) throws Throwable {
-				return new Mailer(TestData.getConfig()).createMessage(invocation.getArgumentAt(0, Notification.class));
+				return new Mailer(TestData.getConfig()).createMessage(invocation.getArgumentAt(0, EmailNotification.class));
 			}
 		});
 	}

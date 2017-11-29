@@ -2,7 +2,7 @@ package sejoharp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static sejoharp.Notification.notification;
+import static sejoharp.EmailNotification.notification;
 
 import javax.mail.MessagingException;
 import javax.mail.Transport;
