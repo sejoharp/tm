@@ -25,7 +25,7 @@ public class Job {
     private final Mailer mailer;
     private final PageReader pageReader;
 
-    private HashSet<Match> oldMatches = new HashSet<Match>();
+    private HashSet<Match> sentNotifications = new HashSet<>();
 
     private static final Logger log = LoggerFactory.getLogger(Job.class);
 
@@ -62,7 +62,7 @@ public class Job {
         notifications.forEach(notification -> {
             try {
                 mailer.send(mailer.createMessage(notification));
-                oldMatches.add(notification.getMatch());
+                sentNotifications.add(notification.getMatch());
                 log.info("sending mail: " + notification);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -72,13 +72,18 @@ public class Job {
 
     List<Notification> findNewMatches(List<Match> matches, Player player) {
         return matches.stream()
-                .filter(match -> notifyPlayer(player, match))
+                .filter(match -> containsRegisteredPlayer(player, match))
+                .filter(this::isNewNotification)
                 .map(match -> notification(match, player.getEmail()))
                 .collect(toList());
     }
 
-    private boolean notifyPlayer(Player player, Match match) {
-        return !oldMatches.contains(match)
-                && (match.getTeam1().contains(player.getName()) || match.getTeam2().contains(player.getName()));
+    private boolean isNewNotification(Match match) {
+        return !sentNotifications.contains(match);
+    }
+
+    private boolean containsRegisteredPlayer(Player player, Match match) {
+        return match.getTeam1().contains(player.getName())
+                || match.getTeam2().contains(player.getName());
     }
 }
