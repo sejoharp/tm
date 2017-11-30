@@ -4,4 +4,8 @@
 .project
 tm.iml
 .classpath
-
+.gradle/
+build/
+out/
+/tournament.json
+/application.yml
