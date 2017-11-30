@@ -10,11 +10,11 @@ import java.io.File;
 import java.io.IOException;
 
 @Component
-public class TournamentConfigReaderImpl implements TournamentConfigReader {
+public class TournamentConfigFileReader implements TournamentConfigReader {
     private final Config config;
 
     @Autowired
-    public TournamentConfigReaderImpl(Config config) {
+    public TournamentConfigFileReader(Config config) {
         this.config = config;
     }
 

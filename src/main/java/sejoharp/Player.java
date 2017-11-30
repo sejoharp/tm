@@ -12,9 +12,9 @@ public class Player {
 
 
     @JsonCreator
-    public Player(@JsonProperty("name") String name,
-                  @JsonProperty("email") String email,
-                  @JsonProperty("chatId") String chatId) {
+    private Player(@JsonProperty("name") String name,
+                   @JsonProperty("email") String email,
+                   @JsonProperty("chatId") String chatId) {
         this.name = name;
         this.email = email;
         this.chatId = chatId;

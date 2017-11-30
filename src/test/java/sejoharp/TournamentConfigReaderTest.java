@@ -14,7 +14,7 @@ public class TournamentConfigReaderTest {
     @Test
     public void getsTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
         // given
-        TournamentConfigReader tournamentConfigReader = new TournamentConfigReaderImpl(TestData.getConfig());
+        TournamentConfigReader tournamentConfigReader = new TournamentConfigFileReader(TestData.getConfig());
 
         // when
         TournamentConfig config = tournamentConfigReader.getTournamentConfig();
