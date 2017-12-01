@@ -17,7 +17,7 @@ public class Mailer {
         this.config = config;
     }
 
-    public MimeMessage createMessage(EmailNotification emailNotification) throws MessagingException {
+    public MimeMessage createMessage(Notification notification) throws MessagingException {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", config.getSmtpserver());
         properties.put("mail.smtp.starttls.enable", "true");
@@ -32,9 +32,9 @@ public class Mailer {
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(config.getSenderaddress()));
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailNotification.getNotificationEmail()));
-        message.setSubject(formatSubject(emailNotification.getMatch()));
-        message.setText(formatBody(emailNotification.getMatch()));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(notification.getEmail()));
+        message.setSubject(formatSubject(notification.getMatch()));
+        message.setText(formatBody(notification.getMatch()));
         return message;
     }
 

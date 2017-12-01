@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage.RecipientType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static sejoharp.EmailNotification.notification;
+import static sejoharp.Notification.notification;
 import static sejoharp.Match.emptyMatch;
 
 public class MailSenderTest {
@@ -42,7 +42,7 @@ public class MailSenderTest {
                 .withTeam1("Aron Schneider / Luciano Auria")
                 .withTeam2("Sophia Becker / Benjamin Beintner");
 
-        MimeMessage message = mailer.createMessage(notification(match, "ich@du.de"));
+        MimeMessage message = mailer.createMessage(notification(match, "ich@du.de", "1"));
         Transport.send(message);
     }
 
@@ -56,7 +56,7 @@ public class MailSenderTest {
                 .withTeam1("Aron Schneider / Luciano Auria")
                 .withTeam2("Sophia Becker / Benjamin Beintner");
 
-        MimeMessage message = mailer.createMessage(notification(match, "ich@du.de"));
+        MimeMessage message = mailer.createMessage(notification(match, "ich@du.de", "1"));
         assertThat(((InternetAddress) message.getRecipients(RecipientType.TO)[0]).getAddress(), is("ich@du.de"));
     }
 }

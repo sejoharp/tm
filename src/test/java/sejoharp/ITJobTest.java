@@ -39,11 +39,11 @@ public class ITJobTest {
         List<Match> matches = parser.getMatches(elements);
 
         // when
-        List<EmailNotification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
+        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
-        assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
+        assertThat(newMatches.get(0).getEmail(), is("ich@du.de"));
     }
 
     @Test
@@ -56,13 +56,13 @@ public class ITJobTest {
                 createPlayer("Borck", "ich2@du.de", "2"));
 
         // when
-        List<EmailNotification> newMatches = job.findAllNewMatches(matches, players);
+        List<Notification> newMatches = job.findAllNewMatches(matches, players);
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
-        assertThat(newMatches.get(0).getNotificationEmail(), is("ich@du.de"));
+        assertThat(newMatches.get(0).getEmail(), is("ich@du.de"));
         assertThat(newMatches.get(1).getMatch().getTeam1(), containsString("Borck"));
-        assertThat(newMatches.get(1).getNotificationEmail(), is("ich2@du.de"));
+        assertThat(newMatches.get(1).getEmail(), is("ich2@du.de"));
         assertThat(newMatches.size(), is(2));
     }
 }
