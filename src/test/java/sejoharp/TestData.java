@@ -43,6 +43,6 @@ class TestData {
                 .withSmtpserver("foobar.de")
                 .withUser("emailuser")
                 .withTournamentConfigPath("src/test/resources/tournament-test.json")
-                .withTelegramToken("123:mytoken");
+                .withTelegramUrl("https://api.telegram.local/bot123:mytoken");
     }
 }

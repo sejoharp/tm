@@ -7,4 +7,4 @@ email:
 
 tournamentConfigPath: src/main/resources/tournament.json
 
-telegramToken:
+telegramUrl:

@@ -20,17 +20,17 @@ public class Config {
     private String senderaddress;
     @Value("${tournamentConfigPath}")
     private String tournamentConfigPath;
-    @Value("${telegramToken}")
-    private String telegramToken;
+    @Value("${telegramUrl}")
+    private String telegramUrl;
 
-    private Config(String port, String smtpserver, String user, String password, String senderaddress, String tournamentConfigPath, String telegramToken) {
+    private Config(String port, String smtpserver, String user, String password, String senderaddress, String tournamentConfigPath, String telegramUrl) {
         this.port = port;
         this.smtpserver = smtpserver;
         this.user = user;
         this.password = password;
         this.senderaddress = senderaddress;
         this.tournamentConfigPath = tournamentConfigPath;
-        this.telegramToken = telegramToken;
+        this.telegramUrl = telegramUrl;
     }
 
     private Config() {
@@ -64,8 +64,8 @@ public class Config {
         return tournamentConfigPath;
     }
 
-    public String getTelegramToken() {
-        return telegramToken;
+    public String getTelegramUrl() {
+        return telegramUrl;
     }
 
     public Config withSenderaddress(String senderaddress) {
@@ -76,7 +76,7 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
     }
 
     public Config withPassword(String password) {
@@ -87,7 +87,7 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
     }
 
     public Config withUser(String user) {
@@ -98,7 +98,7 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
     }
 
     public Config withSmtpserver(String smtpserver) {
@@ -109,7 +109,7 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
 
     }
 
@@ -121,7 +121,7 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
     }
 
     public Config withTournamentConfigPath(String tournamentConfigPath) {
@@ -132,10 +132,10 @@ public class Config {
                 password,
                 senderaddress,
                 tournamentConfigPath,
-                telegramToken);
+                telegramUrl);
     }
 
-    public Config withTelegramToken(String telegramToken) {
+    public Config withTelegramUrl(String telegramToken) {
         return new Config(
                 port,
                 smtpserver,
@@ -155,7 +155,7 @@ public class Config {
                 ", password='" + (StringUtils.isEmpty(password) ? "empty" : "set") + '\'' +
                 ", senderaddress='" + senderaddress + '\'' +
                 ", tournamentConfigPath='" + tournamentConfigPath + '\'' +
-                ", telegramToken='" + (StringUtils.isEmpty(telegramToken) ? "empty" : "set") + '\'' +
+                ", telegramUrl='" + (StringUtils.isEmpty(telegramUrl) ? "empty" : "set") + '\'' +
                 '}';
     }
 
@@ -170,11 +170,11 @@ public class Config {
                 Objects.equals(password, config.password) &&
                 Objects.equals(senderaddress, config.senderaddress) &&
                 Objects.equals(tournamentConfigPath, config.tournamentConfigPath) &&
-                Objects.equals(telegramToken, config.telegramToken);
+                Objects.equals(telegramUrl, config.telegramUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(port, smtpserver, user, password, senderaddress, tournamentConfigPath, telegramToken);
+        return Objects.hash(port, smtpserver, user, password, senderaddress, tournamentConfigPath, telegramUrl);
     }
 }
