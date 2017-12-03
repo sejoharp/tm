@@ -1,25 +1,28 @@
 package sejoharp;
 
-import okhttp3.*;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static sejoharp.Config.emptyConfig;
 import static sejoharp.Notification.notification;
 
 public class TelegramSenderIntegrationTest {
     private static final String PATH = "/bot" + "123:mytoken";
 
     @Test
-    public void sendsTelegramMessage() throws Exception {
+    public void createsValidMessage() throws Exception {
         // given
         MockWebServer server = new MockWebServer();
         server.start();
         HttpUrl url = server.url(PATH);
 
-        Config config = Config.emptyConfig().withTelegramUrl(url.toString());
+        Config config = emptyConfig().withTelegramUrl(url.toString());
         OkHttpClient httpClient = new OkHttpClient();
         TelegramSender sender = TelegramSender.sender(config, httpClient);
 
@@ -31,7 +34,24 @@ public class TelegramSenderIntegrationTest {
         RecordedRequest recordedRequest = server.takeRequest();
         assertThat(recordedRequest.getPath(), equalTo(PATH + "/sendMessage"));
         assertThat(recordedRequest.getMethod(), equalTo("POST"));
-        assertThat(recordedRequest.getBody().readUtf8(), equalTo("chatId=1&text=Match%20%5Bteam1%3DUser1%20%2F%20User2%2C%20team2%3DUser3%20%2F%20User4%2C%20tableNumber%3D2%2C%20discipline%3DGD%20Vorr.%2C%20round%3D2%5D"));
+        assertThat(recordedRequest.getBody().readUtf8(), equalTo("chat_id=1&text=Match%20%5Bteam1%3DUser1%20%2F%20User2%2C%20team2%3DUser3%20%2F%20User4%2C%20tableNumber%3D2%2C%20discipline%3DGD%20Vorr.%2C%20round%3D2%5D"));
 
         server.shutdown();
-    }}
+    }
+
+    @Ignore
+    @Test
+    public void sendsMessage() throws Exception {
+        // given
+        String token = "123:mytoken";
+        Config config = emptyConfig().withTelegramUrl("https://api.telegram.org/bot" + token);
+        OkHttpClient httpClient = new OkHttpClient();
+        TelegramSender sender = TelegramSender.sender(config, httpClient);
+
+        // when
+        String chatId = "1";
+        Notification notification = notification(TestData.getMatch(), "ich@du.de", chatId);
+        sender.sendMessage(notification);
+    }
+}
+

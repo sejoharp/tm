@@ -31,7 +31,7 @@ public class TelegramSender {
                 .addPathSegment(SEND_MESSAGE)
                 .build();
         RequestBody body = new FormBody.Builder()
-                .add("chatId", notification.getChatId())
+                .add("chat_id", notification.getChatId())
                 .add("text", notification.getMatch().toString())
                 .build();
         Request request = new Request.Builder()
@@ -39,9 +39,17 @@ public class TelegramSender {
                 .post(body)
                 .build();
         try {
-            httpClient.newCall(request).execute();
+            Response response = httpClient.newCall(request).execute();
+            logError(response);
         } catch (IOException e) {
             LOGGER.error("failed to send telegram notification. message: {}", e.getMessage());
+        }
+    }
+
+    private static void logError(Response response) throws IOException {
+        if (response.code() != 200){
+            LOGGER.error(response.toString());
+            LOGGER.error(response.body().string());
         }
     }
 }
