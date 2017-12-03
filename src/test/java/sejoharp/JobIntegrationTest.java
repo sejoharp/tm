@@ -16,7 +16,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static sejoharp.Player.createPlayer;
 
-public class ITJobTest {
+public class JobIntegrationTest {
     private Job job;
     private Parser parser;
     private Document doc;

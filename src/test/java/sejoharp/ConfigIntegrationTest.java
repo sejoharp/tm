@@ -11,7 +11,7 @@ import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class ITConfigTest {
+public class ConfigIntegrationTest {
     @Autowired
     Config config;
 
