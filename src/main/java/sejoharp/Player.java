@@ -7,40 +7,28 @@ import java.util.Objects;
 
 public class Player {
     private final String name;
-    private final String email;
     private final String chatId;
 
 
     @JsonCreator
     private Player(@JsonProperty("name") String name,
-                   @JsonProperty("email") String email,
                    @JsonProperty("chatId") String chatId) {
         this.name = name;
-        this.email = email;
         this.chatId = chatId;
     }
 
-    public static Player createPlayer(String name, String email, String chatId) {
-        return new Player(name, email, chatId);
-    }
-
-    public String getEmail() {
-        return email;
+    public static Player createPlayer(String name, String chatId) {
+        return new Player(name, chatId);
     }
 
     public String getName() {
         return name;
     }
 
-    public String getChatId() {
-        return chatId;
-    }
-
     @Override
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
-                ", email='" + email + '\'' +
                 ", chatId='" + chatId + '\'' +
                 '}';
     }
@@ -51,12 +39,16 @@ public class Player {
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
         return Objects.equals(name, player.name) &&
-                Objects.equals(email, player.email) &&
                 Objects.equals(chatId, player.chatId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, chatId);
+        return Objects.hash(name, chatId);
     }
+
+    public String getChatId() {
+        return chatId;
+    }
+
 }

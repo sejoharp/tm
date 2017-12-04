@@ -2,7 +2,6 @@ package sejoharp;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +37,7 @@ public class JobIntegrationTest {
         List<Match> matches = parser.getMatchesFrom(doc);
 
         // when
-        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
+        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "1"));
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
@@ -50,8 +49,8 @@ public class JobIntegrationTest {
         // given
         List<Match> matches = parser.getMatchesFrom(doc);
         List<Player> players = Arrays.asList(
-                createPlayer("Reimer", "ich@du.de", "1"),
-                createPlayer("Borck", "ich2@du.de", "2"));
+                createPlayer("Reimer", "1"),
+                createPlayer("Borck", "2"));
 
         // when
         List<Notification> newMatches = job.findAllNewMatches(matches, players);

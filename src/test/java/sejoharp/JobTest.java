@@ -63,11 +63,4 @@ public class JobTest {
         File file = new File(classLoader.getResource("tournament2.html").getFile());
         return Jsoup.parse(file, "utf-8");
     }
-
-    private Elements loadRunningMatches() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("runningMatchesSnippet.html").getFile());
-        return Jsoup.parse(file, "utf-8").siblingElements();
-    }
-
 }

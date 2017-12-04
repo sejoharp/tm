@@ -3,11 +3,11 @@
   "players": [
     {
       "name": "User1",
-      "email": "user1@domain.com"
+      "chatId": "1"
     },
     {
       "name": "User2",
-      "email": "user2@domain.com"
+      "chatId": "2"
     }
   ]
 }

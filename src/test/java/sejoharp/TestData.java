@@ -10,20 +10,25 @@ import static sejoharp.TournamentConfig.tournamentConfig;
 class TestData {
     static TournamentConfig getTournament1PlayerConfig() {
         return tournamentConfig("http://tournament.com/tour",
-                singletonList(createPlayer("User1", "user1@domain.com", "1")));
+                singletonList(createPlayer("User1", "1")));
+    }
+
+    static TournamentConfig getTournament1PlayerConfig2() {
+        return tournamentConfig("http://tournament.com/tour",
+                singletonList(createPlayer("Marlin Sielfeld", "1")));
     }
 
     static TournamentConfig getTournament2PlayersConfig() {
         return TournamentConfig.tournamentConfig("http://tournament.com/tour",
                 asList(
-                        createPlayer("User1", "user1@domain.com", "1"),
-                        createPlayer("User2", "user2@domain.com", "2")));
+                        createPlayer("User1", "1"),
+                        createPlayer("User2", "2")));
     }
 
     static TournamentConfig getTournament2PlayersConfig2() {
         return TournamentConfig.tournamentConfig("http://tournament.com/tour",
-                asList(createPlayer("Userß", "user1@domain.com", "1"),
-                        createPlayer("User2", "user2@domain.com", "2")));
+                asList(createPlayer("Userß", "1"),
+                        createPlayer("User2", "2")));
     }
 
     static Match getMatch() {
