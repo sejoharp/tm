@@ -53,7 +53,7 @@ public class Job {
         Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
         List<Match> matches = parser.getMatches(runningMatchesSnippet);
         List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
-        sendMailForNewMatches(newMatches);
+        notifyPlayer(newMatches);
     }
 
     List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
@@ -63,12 +63,12 @@ public class Job {
                 .collect(toList());
     }
 
-    private void sendMailForNewMatches(List<Notification> notifications) {
+    private void notifyPlayer(List<Notification> notifications) {
         notifications.forEach(notification -> {
             try {
                 telegramSender.sendMessage(notification);
                 sentNotifications.add(notification.getMatch());
-                log.info("sending mail: " + notification);
+                log.info("sending notification: " + notification);
             } catch (Exception e) {
                 e.printStackTrace();
             }
