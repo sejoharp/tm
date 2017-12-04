@@ -49,7 +49,7 @@ public class TournamentParserImpl implements TournamentParser {
         return element.select(cssQuery).text();
     }
 
-    private static String removeHtmlEncoding(String htmlString) {
+    public static String removeHtmlEncoding(String htmlString) {
         return htmlString.replaceAll("&nbsp", " ");
     }
 
