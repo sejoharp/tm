@@ -29,7 +29,7 @@ public class JobIntegrationTest {
 
         parser = new ParserImpl();
         PageReader pageReader = url -> null;
-        job = Job.newJob(null, parser, null, pageReader);
+        job = Job.newJob(null, parser, pageReader, null);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class JobIntegrationTest {
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
-        assertThat(newMatches.get(0).getEmail(), is("ich@du.de"));
+        assertThat(newMatches.get(0).getChatId(), is("1"));
     }
 
     @Test
@@ -60,9 +60,9 @@ public class JobIntegrationTest {
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1(), containsString("Reimer"));
-        assertThat(newMatches.get(0).getEmail(), is("ich@du.de"));
+        assertThat(newMatches.get(0).getChatId(), is("1"));
         assertThat(newMatches.get(1).getMatch().getTeam1(), containsString("Borck"));
-        assertThat(newMatches.get(1).getEmail(), is("ich2@du.de"));
+        assertThat(newMatches.get(1).getChatId(), is("2"));
         assertThat(newMatches.size(), is(2));
     }
 }

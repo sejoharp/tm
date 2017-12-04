@@ -23,26 +23,26 @@ public class Job {
     private static final Logger log = LoggerFactory.getLogger(Job.class);
     private final TournamentConfigReader tournamentConfigReader;
     private final Parser parser;
-    private final Mailer mailer;
     private final PageReader pageReader;
+    private final TelegramSender telegramSender;
     private HashSet<Match> sentNotifications = new HashSet<>();
 
     @Autowired
     private Job(TournamentConfigReader tournamentConfigReader,
                 Parser parser,
-                Mailer mailer,
-                PageReader pageReader) {
+                PageReader pageReader,
+                TelegramSender telegramSender) {
         this.tournamentConfigReader = tournamentConfigReader;
         this.parser = parser;
-        this.mailer = mailer;
         this.pageReader = pageReader;
+        this.telegramSender = telegramSender;
     }
 
     public static Job newJob(TournamentConfigReader tournamentConfigReader,
                              Parser parser,
-                             Mailer mailer,
-                             PageReader pageReader){
-        return new Job(tournamentConfigReader, parser, mailer, pageReader);
+                             PageReader pageReader,
+                             TelegramSender telegramSender){
+        return new Job(tournamentConfigReader, parser, pageReader, telegramSender);
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)
@@ -66,7 +66,7 @@ public class Job {
     private void sendMailForNewMatches(List<Notification> notifications) {
         notifications.forEach(notification -> {
             try {
-                mailer.send(mailer.createMessage(notification));
+                telegramSender.sendMessage(notification);
                 sentNotifications.add(notification.getMatch());
                 log.info("sending mail: " + notification);
             } catch (Exception e) {
@@ -79,7 +79,7 @@ public class Job {
         return matches.stream()
                 .filter(match -> containsRegisteredPlayer(player, match))
                 .filter(this::isNewNotification)
-                .map(match -> notification(match, player.getEmail(), player.getChatId()))
+                .map(match -> notification(match, player.getChatId()))
                 .collect(toList());
     }
 

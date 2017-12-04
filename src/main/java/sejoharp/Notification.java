@@ -4,26 +4,20 @@ import java.util.Objects;
 
 public class Notification {
     private final Match match;
-    private final String email;
     private final String chatId;
 
-    private Notification(Match match, String email, String chatId) {
+    private Notification(Match match, String chatId) {
         this.match = match;
-        this.email = email;
         this.chatId = chatId;
     }
 
-    public static Notification notification(Match match, String email, String chatId) {
-        return new Notification(match, email, chatId);
+    public static Notification notification(Match match, String chatId) {
+        return new Notification(match, chatId);
 
     }
 
     public Match getMatch() {
         return match;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getChatId() {
@@ -34,7 +28,6 @@ public class Notification {
     public String toString() {
         return "Notification{" +
                 "match=" + match +
-                ", email='" + email + '\'' +
                 ", chatId='" + chatId + '\'' +
                 '}';
     }
@@ -45,13 +38,12 @@ public class Notification {
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
         return Objects.equals(match, that.match) &&
-                Objects.equals(email, that.email) &&
                 Objects.equals(chatId, that.chatId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(match, email, chatId);
+        return Objects.hash(match, chatId);
     }
 
 }

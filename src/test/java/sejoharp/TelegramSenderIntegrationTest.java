@@ -27,7 +27,7 @@ public class TelegramSenderIntegrationTest {
         TelegramSender sender = TelegramSender.sender(config, httpClient);
 
         // when
-        Notification notification = notification(TestData.getMatch(), "ich@du.de", "1");
+        Notification notification = notification(TestData.getMatch(), "1");
         sender.sendMessage(notification);
 
         // then
@@ -50,7 +50,7 @@ public class TelegramSenderIntegrationTest {
 
         // when
         String chatId = "1";
-        Notification notification = notification(TestData.getMatch(), "ich@du.de", chatId);
+        Notification notification = notification(TestData.getMatch(), chatId);
         sender.sendMessage(notification);
     }
 }

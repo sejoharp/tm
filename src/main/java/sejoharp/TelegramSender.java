@@ -11,7 +11,6 @@ import java.io.IOException;
 public class TelegramSender {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TelegramSender.class);
     private static final String SEND_MESSAGE = "sendMessage";
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     private final Config config;
     private final OkHttpClient httpClient;
 
