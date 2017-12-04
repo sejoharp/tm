@@ -22,27 +22,27 @@ import static sejoharp.Notification.notification;
 public class Job {
     private static final Logger log = LoggerFactory.getLogger(Job.class);
     private final TournamentConfigReader tournamentConfigReader;
-    private final Parser parser;
+    private final TournamentParser tournamentParser;
     private final PageReader pageReader;
     private final TelegramSender telegramSender;
     private HashSet<Match> sentNotifications = new HashSet<>();
 
     @Autowired
     private Job(TournamentConfigReader tournamentConfigReader,
-                Parser parser,
+                TournamentParser tournamentParser,
                 PageReader pageReader,
                 TelegramSender telegramSender) {
         this.tournamentConfigReader = tournamentConfigReader;
-        this.parser = parser;
+        this.tournamentParser = tournamentParser;
         this.pageReader = pageReader;
         this.telegramSender = telegramSender;
     }
 
     public static Job newJob(TournamentConfigReader tournamentConfigReader,
-                             Parser parser,
+                             TournamentParser tournamentParser,
                              PageReader pageReader,
                              TelegramSender telegramSender){
-        return new Job(tournamentConfigReader, parser, pageReader, telegramSender);
+        return new Job(tournamentConfigReader, tournamentParser, pageReader, telegramSender);
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)
@@ -50,8 +50,7 @@ public class Job {
         log.info("reading matches..");
         TournamentConfig tournamentConfig = tournamentConfigReader.getTournamentConfig();
         Document page = pageReader.getPage(tournamentConfig.getUrl());
-        Elements runningMatchesSnippet = parser.getRunningMatchesSnippet(page);
-        List<Match> matches = parser.getMatches(runningMatchesSnippet);
+        List<Match> matches = tournamentParser.getMatchesFrom(page);
         List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
         notifyPlayer(newMatches);
     }

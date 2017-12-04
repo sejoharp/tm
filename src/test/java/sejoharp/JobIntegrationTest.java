@@ -18,7 +18,7 @@ import static sejoharp.Player.createPlayer;
 
 public class JobIntegrationTest {
     private Job job;
-    private ParserImpl parser;
+    private TournamentParserImpl parser;
     private Document doc;
 
     @Before
@@ -27,7 +27,7 @@ public class JobIntegrationTest {
         File file = new File(classLoader.getResource("tournament2.html").getFile());
         doc = Jsoup.parse(file, "utf-8", "");
 
-        parser = new ParserImpl();
+        parser = new TournamentParserImpl();
         PageReader pageReader = url -> null;
         job = Job.newJob(null, parser, pageReader, null);
     }
@@ -35,8 +35,7 @@ public class JobIntegrationTest {
     @Test
     public void findsNewMatches() throws IOException {
         // given
-        Elements elements = parser.getRunningMatchesSnippet(doc);
-        List<Match> matches = parser.getMatches(elements);
+        List<Match> matches = parser.getMatchesFrom(doc);
 
         // when
         List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "ich@du.de", "1"));
@@ -49,8 +48,7 @@ public class JobIntegrationTest {
     @Test
     public void finds2NewMatches() throws IOException {
         // given
-        Elements elements = parser.getRunningMatchesSnippet(doc);
-        List<Match> matches = parser.getMatches(elements);
+        List<Match> matches = parser.getMatchesFrom(doc);
         List<Player> players = Arrays.asList(
                 createPlayer("Reimer", "ich@du.de", "1"),
                 createPlayer("Borck", "ich2@du.de", "2"));

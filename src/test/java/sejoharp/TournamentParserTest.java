@@ -13,13 +13,13 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class ParserTest {
-    private ParserImpl parser;
+public class TournamentParserTest {
+    private TournamentParserImpl parser;
     private Document doc;
 
     @Before
     public void setup() throws IOException {
-        parser = new ParserImpl();
+        parser = new TournamentParserImpl();
         ClassLoader classLoader = getClass().getClassLoader();
         File testFile = new File(classLoader.getResource("tournament2.html").getFile());
         doc = Jsoup.parse(testFile, "utf-8", "");
@@ -27,17 +27,14 @@ public class ParserTest {
 
     @Test
     public void getsRunningMatches() throws IOException {
-        Elements elements = parser.getRunningMatchesSnippet(doc);
+        Elements elements = TournamentParserImpl.getRunningMatchesSnippet(doc);
         assertThat(elements.size(), is(8));
     }
 
     @Test
     public void parsesMatches() throws IOException {
-        // given
-        Elements elements = parser.getRunningMatchesSnippet(doc);
-
         // when
-        List<Match> matches = parser.getMatches(elements);
+        List<Match> matches = parser.getMatchesFrom(doc);
 
         // then
         Match first = matches.get(0);
@@ -50,8 +47,7 @@ public class ParserTest {
 
     @Test
     public void parseSpecialMatches() throws IOException {
-        Elements elements = parser.getRunningMatchesSnippet(doc);
-        List<Match> matches = parser.getMatches(elements);
+        List<Match> matches = parser.getMatchesFrom(doc);
         assertThat(matches.get(2).getTeam1(), is("Niclas Grote / Mona Brandt"));
     }
 

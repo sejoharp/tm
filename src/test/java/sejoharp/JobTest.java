@@ -49,11 +49,11 @@ public class JobTest {
     }
 
     private Job createJob(TournamentConfigReader tournamentConfigReader) throws IOException, MessagingException {
-        Document doc = loadTournamentData();
-        Parser parser = elements -> singletonList(TestData.getMatch());
+        TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         telegramSender = mock(TelegramSender.class);
+        Document doc = loadTournamentData();
         PageReader pageReader = url -> doc;
-        return Job.newJob(tournamentConfigReader, parser, pageReader, telegramSender);
+        return Job.newJob(tournamentConfigReader, tournamentParser, pageReader, telegramSender);
     }
 
     // fixtures
