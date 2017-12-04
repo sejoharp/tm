@@ -18,7 +18,7 @@ import static sejoharp.Player.createPlayer;
 
 public class JobIntegrationTest {
     private Job job;
-    private Parser parser;
+    private ParserImpl parser;
     private Document doc;
 
     @Before
@@ -27,9 +27,9 @@ public class JobIntegrationTest {
         File file = new File(classLoader.getResource("tournament2.html").getFile());
         doc = Jsoup.parse(file, "utf-8", "");
 
-        parser = new Parser();
+        parser = new ParserImpl();
         PageReader pageReader = url -> null;
-        job = new Job(null, parser, null, pageReader);
+        job = Job.newJob(null, parser, null, pageReader);
     }
 
     @Test

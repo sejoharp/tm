@@ -18,7 +18,7 @@ public class MailSenderTest {
 
     @Test
     public void formatsMail() {
-        Mailer mailer = new Mailer(null);
+        MailerImpl mailer = new MailerImpl(null);
 
         Match match = emptyMatch()
                 .withTableNumber("2")
@@ -27,14 +27,14 @@ public class MailSenderTest {
                 .withTeam1("Aron Schneider / Luciano Auria")
                 .withTeam2("Sophia Becker / Benjamin Beintner");
 
-        assertThat(mailer.formatSubject(match), is(
+        assertThat(Mailer.formatSubject(match), is(
                 "Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner"));
     }
 
     @Test
     @Ignore
     public void sendsMail() throws MessagingException {
-        Mailer mailer = new Mailer(TestData.getConfig());
+        Mailer mailer = new MailerImpl(TestData.getConfig());
         Match match = emptyMatch()
                 .withTableNumber("2")
                 .withDiscipline("GD Vorr.")
@@ -48,7 +48,7 @@ public class MailSenderTest {
 
     @Test
     public void createsMail() throws MessagingException {
-        Mailer mailer = new Mailer(TestData.getConfig());
+        Mailer mailer = new MailerImpl(TestData.getConfig());
         Match match = emptyMatch()
                 .withTableNumber("2")
                 .withDiscipline("GD Vorr.")

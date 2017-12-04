@@ -14,12 +14,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class ParserTest {
-    private Parser parser;
+    private ParserImpl parser;
     private Document doc;
 
     @Before
     public void setup() throws IOException {
-        parser = new Parser();
+        parser = new ParserImpl();
         ClassLoader classLoader = getClass().getClassLoader();
         File testFile = new File(classLoader.getResource("tournament2.html").getFile());
         doc = Jsoup.parse(testFile, "utf-8", "");

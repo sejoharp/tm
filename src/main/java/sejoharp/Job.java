@@ -28,14 +28,21 @@ public class Job {
     private HashSet<Match> sentNotifications = new HashSet<>();
 
     @Autowired
-    public Job(TournamentConfigReader tournamentConfigReader,
-               Parser parser,
-               Mailer mailer,
-               PageReader pageReader) {
+    private Job(TournamentConfigReader tournamentConfigReader,
+                Parser parser,
+                Mailer mailer,
+                PageReader pageReader) {
         this.tournamentConfigReader = tournamentConfigReader;
         this.parser = parser;
         this.mailer = mailer;
         this.pageReader = pageReader;
+    }
+
+    public static Job newJob(TournamentConfigReader tournamentConfigReader,
+                             Parser parser,
+                             Mailer mailer,
+                             PageReader pageReader){
+        return new Job(tournamentConfigReader, parser, mailer, pageReader);
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)

@@ -3,37 +3,15 @@ package sejoharp;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static sejoharp.Match.emptyMatch;
+public interface Parser {
 
-@Component
-public class Parser {
-
-    private static Match parseMatch(Element element) {
-        return emptyMatch()
-                .withTableNumber(getText(element, "td:nth-child(1)"))
-                .withDiscipline(getText(element, "td:nth-child(2)"))
-                .withRound(getText(element, "td:nth-child(3)"))
-                .withTeam1(removeHtmlEncoding(getText(element, "td:nth-child(4)")))
-                .withTeam2(removeHtmlEncoding(getText(element, "td:nth-child(6)")));
-    }
-
-    private static String getText(Element element, String cssQuery) {
-        return element.select(cssQuery).text();
-    }
-
-    private static String removeHtmlEncoding(String htmlString) {
-        return htmlString.replaceAll("&nbsp", " ");
-    }
-
-    public Elements getRunningMatchesSnippet(Document doc) {
+    default Elements getRunningMatchesSnippet(Document doc) {
         Elements elements = doc.select("table.table:nth-child(2)");
         for (Element element : elements) {
-            String tableTitle = getText(element, "thead:nth-child(1) > tr:nth-child(1) > th:nth-child(1)");
+            String tableTitle = ParserImpl.getText(element, "thead:nth-child(1) > tr:nth-child(1) > th:nth-child(1)");
             if (tableTitle.equals("laufende Spiele")) {
                 return element.select("tbody > tr");
             }
@@ -41,9 +19,5 @@ public class Parser {
         return new Elements();
     }
 
-    List<Match> getMatches(Elements elements) {
-        return elements.stream()
-                .map(Parser::parseMatch)
-                .collect(Collectors.toList());
-    }
+    List<Match> getMatches(Elements elements);
 }
