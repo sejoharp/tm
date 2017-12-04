@@ -32,7 +32,7 @@ public class TelegramSender {
                 .build();
         RequestBody body = new FormBody.Builder()
                 .add("chat_id", notification.getChatId())
-                .add("text", notification.getMatch().toString())
+                .add("text", notification.getMatch().toFormattedString())
                 .build();
         Request request = new Request.Builder()
                 .url(url)

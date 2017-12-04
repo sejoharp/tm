@@ -34,7 +34,7 @@ public class MailerImpl implements Mailer {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(config.getSenderaddress()));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(notification.getEmail()));
-        message.setSubject(Mailer.formatSubject(notification.getMatch()));
+        message.setSubject(notification.getMatch().toFormattedString());
         message.setText(formatBody(notification.getMatch()));
         return message;
     }

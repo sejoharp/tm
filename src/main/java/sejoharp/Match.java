@@ -1,5 +1,7 @@
 package sejoharp;
 
+import java.util.Objects;
+
 public class Match {
     private String team1;
     private String team2;
@@ -62,58 +64,36 @@ public class Match {
         return new Match(team1, team2, tableNumber, discipline, round);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((discipline == null) ? 0 : discipline.hashCode());
-        result = prime * result + ((round == null) ? 0 : round.hashCode());
-        result = prime * result + ((tableNumber == null) ? 0 : tableNumber.hashCode());
-        result = prime * result + ((team1 == null) ? 0 : team1.hashCode());
-        result = prime * result + ((team2 == null) ? 0 : team2.hashCode());
-        return result;
+    public String toFormattedString() {
+        return String.format("Tisch:%s | Disziplin:%s | Runde:%s | %s vs. %s", tableNumber,
+                discipline, round, team1, team2);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Match other = (Match) obj;
-        if (discipline == null) {
-            if (other.discipline != null)
-                return false;
-        } else if (!discipline.equals(other.discipline))
-            return false;
-        if (round == null) {
-            if (other.round != null)
-                return false;
-        } else if (!round.equals(other.round))
-            return false;
-        if (tableNumber == null) {
-            if (other.tableNumber != null)
-                return false;
-        } else if (!tableNumber.equals(other.tableNumber))
-            return false;
-        if (team1 == null) {
-            if (other.team1 != null)
-                return false;
-        } else if (!team1.equals(other.team1))
-            return false;
-        if (team2 == null) {
-            if (other.team2 != null)
-                return false;
-        } else if (!team2.equals(other.team2))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Match match = (Match) o;
+        return Objects.equals(team1, match.team1) &&
+                Objects.equals(team2, match.team2) &&
+                Objects.equals(tableNumber, match.tableNumber) &&
+                Objects.equals(discipline, match.discipline) &&
+                Objects.equals(round, match.round);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(team1, team2, tableNumber, discipline, round);
     }
 
     @Override
     public String toString() {
-        return "Match [team1=" + team1 + ", team2=" + team2 + ", tableNumber=" + tableNumber + ", discipline="
-                + discipline + ", round=" + round + "]";
+        return "Match{" +
+                "team1='" + team1 + '\'' +
+                ", team2='" + team2 + '\'' +
+                ", tableNumber='" + tableNumber + '\'' +
+                ", discipline='" + discipline + '\'' +
+                ", round='" + round + '\'' +
+                '}';
     }
 }

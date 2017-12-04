@@ -15,22 +15,6 @@ import static sejoharp.Notification.notification;
 import static sejoharp.Match.emptyMatch;
 
 public class MailSenderTest {
-
-    @Test
-    public void formatsMail() {
-        MailerImpl mailer = new MailerImpl(null);
-
-        Match match = emptyMatch()
-                .withTableNumber("2")
-                .withDiscipline("GD Vorr.")
-                .withRound("2")
-                .withTeam1("Aron Schneider / Luciano Auria")
-                .withTeam2("Sophia Becker / Benjamin Beintner");
-
-        assertThat(Mailer.formatSubject(match), is(
-                "Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner"));
-    }
-
     @Test
     @Ignore
     public void sendsMail() throws MessagingException {
