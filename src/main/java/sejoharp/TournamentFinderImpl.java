@@ -31,7 +31,7 @@ public class TournamentFinderImpl implements TournamentFinder {
 
     public Set<String> calculateInterestingTournaments(TournamentConfig config, Set<String> knownTournaments) {
         Set<String> runningTournaments = findRunningTournaments();
-        Set<String> interestingTournaments = findInterestingTournaments(config);
+        Set<String> interestingTournaments = findInterestingTournaments(config, runningTournaments);
         return runningTournaments.stream()
                 .filter(url -> knownTournaments.contains(url) || interestingTournaments.contains(url))
                 .collect(toSet());
@@ -48,17 +48,13 @@ public class TournamentFinderImpl implements TournamentFinder {
         return emptySet();
     }
 
-    Set<String> findInterestingTournaments(TournamentConfig tournamentConfig) {
-        return findRunningTournaments().stream()
+    Set<String> findInterestingTournaments(TournamentConfig tournamentConfig, Set<String> runningTournaments) {
+        return runningTournaments.stream()
                 .filter(url -> containsPlayer(url, tournamentConfig))
                 .collect(toSet());
     }
 
-    private static String getUrl(Element element) {
-        return element.baseUri() + element.attr("href");
-    }
-
-    private boolean containsPlayer(String url, TournamentConfig tournamentConfig) {
+    boolean containsPlayer(String url, TournamentConfig tournamentConfig) {
         Document page = tournamentReader.getPage(url);
         String decodedPage = TournamentParserImpl.removeHtmlEncoding(page.body().text());
         for (Player player : tournamentConfig.getPlayers()) {
@@ -67,5 +63,9 @@ public class TournamentFinderImpl implements TournamentFinder {
             }
         }
         return false;
+    }
+
+    private static String getUrl(Element element) {
+        return element.baseUri() + element.attr("href");
     }
 }

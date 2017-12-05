@@ -23,17 +23,14 @@ public class TournamentFinderTest {
     public void findsTournamentsWithPlayers() throws Exception {
         // given
         TournamentConfig config = TestData.getTournament1PlayerConfig2();
-        PageReader pageReader = url -> loadTournamentOverview();
         PageReader tournamentReader = url -> loadTournament();
+        TournamentFinderImpl tournamentFinder = tournamentFinder(null, tournamentReader);
 
         // when
-        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
+        boolean containsPlayer = tournamentFinder.containsPlayer(null, config);
 
         // then
-        assertThat(tournaments).hasSize(2);
-        assertThat(tournaments).containsExactly(
-                "http://www.tifu.info/turnier?turnierid=177&ver=2",
-                "http://www.tifu.info/turnier?turnierid=177&ver=3");
+        assertThat(containsPlayer).isTrue();
     }
 
     @Test
@@ -42,12 +39,13 @@ public class TournamentFinderTest {
         PageReader pageReader = url -> loadTournamentOverview();
         PageReader tournamentReader = url -> loadTournament();
         TournamentConfig config = TestData.getTournament1PlayerConfig();
+        TournamentFinderImpl tournamentFinder = tournamentFinder(null, tournamentReader);
 
         // when
-        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
+        boolean containsPlayer = tournamentFinder.containsPlayer(null,config);
 
         // then
-        assertThat(tournaments).hasSize(0);
+        assertThat(containsPlayer).isFalse();
     }
 
     @DataProvider()
@@ -70,7 +68,7 @@ public class TournamentFinderTest {
         // given
         TournamentFinderImpl tournamentFinder = mock(TournamentFinderImpl.class);
         when(tournamentFinder.findRunningTournaments()).thenReturn(running);
-        when(tournamentFinder.findInterestingTournaments(any())).thenReturn(interesting);
+        when(tournamentFinder.findInterestingTournaments(any(), any())).thenReturn(interesting);
         when(tournamentFinder.calculateInterestingTournaments(any(), any())).thenCallRealMethod();
 
         // when
