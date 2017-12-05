@@ -96,29 +96,23 @@ public class TournamentFinderTest {
                 "http://www.tifu.info/turnier?turnierid=177&ver=3");
     }
 
+    //fixtures
+    private Document loadTournamentOverview() {
+        return getDocument("overview.html");
+    }
 
-    // helper
+    private Document loadTournament() {
+        return getDocument("tournament2.html");
+    }
 
+    // helpers
     private Set<String> toSet(String... urls) {
         return new HashSet<>(Arrays.asList(urls));
     }
 
-    //fixtures
-
-    private Document loadTournamentOverview() {
+    private Document getDocument(String fileName) {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("overview.html").getFile());
-        try {
-            return Jsoup.parse(file, "utf-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Document loadTournament() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("tournament2.html").getFile());
+        File file = new File(classLoader.getResource(fileName).getFile());
         try {
             return Jsoup.parse(file, "utf-8");
         } catch (IOException e) {
