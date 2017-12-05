@@ -61,16 +61,16 @@ public class TournamentFinderTest {
                 {toSet("t1", "t2"), emptySet(), toSet("t3"), emptySet()},
                 {toSet("t1", "t2"), emptySet(), toSet("t1"), toSet("t1")},
                 {toSet("t1", "t2"), toSet("t2"), toSet("t1"), toSet("t1", "t2")},
-                {toSet("t1", "t2"), toSet("t2"), toSet("t3"), toSet( "t2")},
+                {toSet("t1", "t2"), toSet("t2"), toSet("t3"), toSet("t2")},
                 {emptySet(), toSet("t2"), toSet("t3"), emptySet()},
         };
     }
 
     @Test(dataProvider = "testdata")
     public void findsInterestingTournaments(Set<String> running,
-                                                  Set<String> interesting,
-                                                  Set<String> known,
-                                                  Set<String> expected) {
+                                            Set<String> interesting,
+                                            Set<String> known,
+                                            Set<String> expected) {
         // given
         TournamentFinderImpl tournamentFinder = mock(TournamentFinderImpl.class);
         when(tournamentFinder.findRunningTournaments()).thenReturn(running);
@@ -101,29 +101,13 @@ public class TournamentFinderTest {
     }
 
 
-    //fixtures
-
+    // helper
+    
     private Set<String> toSet(String... urls) {
         return new HashSet<>(Arrays.asList(urls));
     }
 
-    private HashSet<String> runningTournaments() {
-        return new HashSet<>(Arrays.asList(
-                "http://www.tifu.info/turnier?turnierid=179&ver=1",
-                "http://www.tifu.info/turnier?turnierid=179&ver=2"));
-    }
-
-    private HashSet<String> knownTournaments() {
-        return new HashSet<>(Arrays.asList(
-                "http://www.tifu.info/turnier?turnierid=179&ver=1",
-                "http://www.tifu.info/turnier?turnierid=179&ver=3"));
-    }
-
-    private HashSet<String> tournamentsWithPlayers() {
-        return new HashSet<>(Arrays.asList(
-                "http://www.tifu.info/turnier?turnierid=179&ver=1",
-                "http://www.tifu.info/turnier?turnierid=179&ver=3"));
-    }
+    //fixtures
 
     private Document loadTournamentOverview() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
