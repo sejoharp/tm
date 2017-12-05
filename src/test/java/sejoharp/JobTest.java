@@ -4,17 +4,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.testng.annotations.Test;
 
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -34,8 +32,8 @@ public class JobTest {
         verify(telegramSender, times(2)).sendMessage(argumentCaptor.capture());
         String recipientAddress = argumentCaptor.getAllValues().get(0).getChatId();
         String recipientAddress1 = argumentCaptor.getAllValues().get(1).getChatId();
-        assertThat(recipientAddress, is(TestData.getTournament2PlayersConfig().getPlayers().get(0).getChatId()));
-        assertThat(recipientAddress1, is(TestData.getTournament2PlayersConfig().getPlayers().get(1).getChatId()));
+        assertThat(recipientAddress).isEqualTo(TestData.getTournament2PlayersConfig().getPlayers().get(0).getChatId());
+        assertThat(recipientAddress1).isEqualTo(TestData.getTournament2PlayersConfig().getPlayers().get(1).getChatId());
     }
 
     @Test

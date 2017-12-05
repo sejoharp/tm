@@ -1,9 +1,8 @@
 package sejoharp;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static sejoharp.Match.emptyMatch;
 
 public class MatchTest {
@@ -16,7 +15,7 @@ public class MatchTest {
                 .withTeam1("Aron Schneider / Luciano Auria")
                 .withTeam2("Sophia Becker / Benjamin Beintner");
 
-        assertThat(match.toFormattedString(), is(
-                "Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner"));
+        assertThat(match.toFormattedString()).isEqualTo(
+                "Tisch:2 | Disziplin:GD Vorr. | Runde:2 | Aron Schneider / Luciano Auria vs. Sophia Becker / Benjamin Beintner");
     }
 }

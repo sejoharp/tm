@@ -2,12 +2,11 @@ package sejoharp;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TournamentConfigReaderTest {
 
@@ -20,6 +19,6 @@ public class TournamentConfigReaderTest {
         TournamentConfig config = tournamentConfigReader.getTournamentConfig();
 
         // then
-        assertThat(config, is(TestData.getTournament2PlayersConfig2()));
+        assertThat(config).isEqualTo(TestData.getTournament2PlayersConfig2());
     }
 }

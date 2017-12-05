@@ -4,11 +4,10 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.testng.annotations.Ignore;
+import org.testng.annotations.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static sejoharp.Config.emptyConfig;
 import static sejoharp.Notification.notification;
 
@@ -32,9 +31,9 @@ public class TelegramSenderIntegrationTest {
 
         // then
         RecordedRequest recordedRequest = server.takeRequest();
-        assertThat(recordedRequest.getPath(), equalTo(PATH + "/sendMessage"));
-        assertThat(recordedRequest.getMethod(), equalTo("POST"));
-        assertThat(recordedRequest.getBody().readUtf8(), equalTo("chat_id=1&text=Tisch%3A2%20%7C%20Disziplin%3AGD%20Vorr.%20%7C%20Runde%3A2%20%7C%20User1%20%2F%20User2%20vs.%20User3%20%2F%20User4"));
+        assertThat(recordedRequest.getPath()).isEqualTo(PATH + "/sendMessage");
+        assertThat(recordedRequest.getMethod()).isEqualTo("POST");
+        assertThat(recordedRequest.getBody().readUtf8()).isEqualTo("chat_id=1&text=Tisch%3A2%20%7C%20Disziplin%3AGD%20Vorr.%20%7C%20Runde%3A2%20%7C%20User1%20%2F%20User2%20vs.%20User3%20%2F%20User4");
 
         server.shutdown();
     }
