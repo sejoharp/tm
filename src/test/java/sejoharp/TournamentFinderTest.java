@@ -102,7 +102,7 @@ public class TournamentFinderTest {
 
 
     // helper
-    
+
     private Set<String> toSet(String... urls) {
         return new HashSet<>(Arrays.asList(urls));
     }

@@ -38,8 +38,7 @@ public class TelegramSenderIntegrationTest {
         server.shutdown();
     }
 
-    @Ignore
-    @Test
+    @Test(enabled = false)
     public void sendsMessage() throws Exception {
         // given
         String token = "123:mytoken";
