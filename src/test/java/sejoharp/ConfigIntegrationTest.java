@@ -16,11 +16,6 @@ public class ConfigIntegrationTest extends AbstractTestNGSpringContextTests
 
     @Test
     public void containsAllProperties() {
-        assertThat(config.getSmtpserver(), is("smtp.domain.de"));
-        assertThat(config.getPort(), is("587"));
-        assertThat(config.getUser(), is("emailuser"));
-        assertThat(config.getPassword(), is("secret"));
-        assertThat(config.getSenderaddress(), is("sender@domain.de"));
         assertThat(config.getTournamentConfigPath(), is("src/test/resources/tournament-test.json"));
         assertThat(config.getTelegramUrl(), is("https://api.telegram.local/bot123:mytoken"));
     }

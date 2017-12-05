@@ -42,11 +42,6 @@ class TestData {
 
     static Config getConfig() {
         return emptyConfig()
-                .withPassword("password")
-                .withPort("587")
-                .withSenderaddress("sender@foobar.de")
-                .withSmtpserver("foobar.de")
-                .withUser("emailuser")
                 .withTournamentConfigPath("src/test/resources/tournament-test.json")
                 .withTelegramUrl("https://api.telegram.local/bot123:mytoken");
     }
