@@ -2,6 +2,7 @@ package sejoharp;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -27,7 +29,7 @@ public class TournamentFinderTest {
         PageReader tournamentReader = url -> tournamentPage;
 
         // when
-        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findTournamentsWithPlayers(config);
+        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
 
         // then
         assertThat(tournaments).hasSize(2);
@@ -46,21 +48,33 @@ public class TournamentFinderTest {
         // when
         TournamentConfig config = TestData.getTournament1PlayerConfig();
         PageReader tournamentReader = url -> tournamentPage;
-        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findTournamentsWithPlayers(config);
+        Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
 
         // then
         assertThat(tournaments).hasSize(0);
     }
 
-    @Test()
-    public void removeEndedTournamentsWithPlayers(Set<String> running,
+    @DataProvider()
+    public Object[][] testdata() {
+        return new Object[][]{
+                //running  interesting  kown  expected
+                {toSet("t1", "t2"), emptySet(), toSet("t3"), emptySet()},
+                {toSet("t1", "t2"), emptySet(), toSet("t1"), toSet("t1")},
+                {toSet("t1", "t2"), toSet("t2"), toSet("t1"), toSet("t1", "t2")},
+                {toSet("t1", "t2"), toSet("t2"), toSet("t3"), toSet( "t2")},
+                {emptySet(), toSet("t2"), toSet("t3"), emptySet()},
+        };
+    }
+
+    @Test(dataProvider = "testdata")
+    public void findsInterestingTournaments(Set<String> running,
                                                   Set<String> interesting,
                                                   Set<String> known,
                                                   Set<String> expected) {
         // given
-        TournamentFinder tournamentFinder = mock(TournamentFinder.class);
+        TournamentFinderImpl tournamentFinder = mock(TournamentFinderImpl.class);
         when(tournamentFinder.findRunningTournaments()).thenReturn(running);
-        when(tournamentFinder.findTournamentsWithPlayers(any())).thenReturn(interesting);
+        when(tournamentFinder.findInterestingTournaments(any())).thenReturn(interesting);
         when(tournamentFinder.calculateInterestingTournaments(any(), any())).thenCallRealMethod();
 
         // when
@@ -68,11 +82,6 @@ public class TournamentFinderTest {
 
         // then
         assertThat(tournaments).containsExactlyElementsOf(expected);
-    }
-
-    @Test
-    public void addNewRunningTournamentsWithPlayers() throws Exception {
-
     }
 
     @Test
@@ -93,6 +102,10 @@ public class TournamentFinderTest {
 
 
     //fixtures
+
+    private Set<String> toSet(String... urls) {
+        return new HashSet<>(Arrays.asList(urls));
+    }
 
     private HashSet<String> runningTournaments() {
         return new HashSet<>(Arrays.asList(

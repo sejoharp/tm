@@ -46,7 +46,7 @@ public class Job {
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)
-    void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
+    public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         log.info("reading matches..");
         TournamentConfig tournamentConfig = tournamentConfigReader.getTournamentConfig();
         Document page = pageReader.getPage(tournamentConfig.getUrl());
