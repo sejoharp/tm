@@ -23,10 +23,8 @@ public class TournamentFinderTest {
     public void findsTournamentsWithPlayers() throws Exception {
         // given
         TournamentConfig config = TestData.getTournament1PlayerConfig2();
-        Document overviewPage = loadTournamentOverview();
-        PageReader pageReader = url -> overviewPage;
-        Document tournamentPage = loadTournament();
-        PageReader tournamentReader = url -> tournamentPage;
+        PageReader pageReader = url -> loadTournamentOverview();
+        PageReader tournamentReader = url -> loadTournament();
 
         // when
         Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
@@ -41,13 +39,11 @@ public class TournamentFinderTest {
     @Test
     public void findsNoTournamentsWithPlayers() throws Exception {
         // given
-        Document document = loadTournamentOverview();
-        PageReader pageReader = url -> document;
-        Document tournamentPage = loadTournament();
+        PageReader pageReader = url -> loadTournamentOverview();
+        PageReader tournamentReader = url -> loadTournament();
+        TournamentConfig config = TestData.getTournament1PlayerConfig();
 
         // when
-        TournamentConfig config = TestData.getTournament1PlayerConfig();
-        PageReader tournamentReader = url -> tournamentPage;
         Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findInterestingTournaments(config);
 
         // then
@@ -109,15 +105,25 @@ public class TournamentFinderTest {
 
     //fixtures
 
-    private Document loadTournamentOverview() throws IOException {
+    private Document loadTournamentOverview() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("overview.html").getFile());
-        return Jsoup.parse(file, "utf-8");
+        try {
+            return Jsoup.parse(file, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    private Document loadTournament() throws IOException {
+    private Document loadTournament() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("tournament2.html").getFile());
-        return Jsoup.parse(file, "utf-8");
+        try {
+            return Jsoup.parse(file, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

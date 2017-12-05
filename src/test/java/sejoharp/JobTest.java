@@ -32,8 +32,8 @@ public class JobTest {
         verify(telegramSender, times(2)).sendMessage(argumentCaptor.capture());
         String recipientAddress = argumentCaptor.getAllValues().get(0).getChatId();
         String recipientAddress1 = argumentCaptor.getAllValues().get(1).getChatId();
-        assertThat(recipientAddress).isEqualTo(TestData.getTournament2PlayersConfig().getPlayers().get(0).getChatId());
-        assertThat(recipientAddress1).isEqualTo(TestData.getTournament2PlayersConfig().getPlayers().get(1).getChatId());
+        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(0));
+        assertThat(recipientAddress1).isEqualTo(getChatIdFromConfig(1));
     }
 
     @Test
@@ -46,19 +46,27 @@ public class JobTest {
         verify(telegramSender).sendMessage(any(Notification.class));
     }
 
+    // helpers
     private Job createJob(TournamentConfigReader tournamentConfigReader) throws IOException, MessagingException {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         telegramSender = mock(TelegramSender.class);
-        Document doc = loadTournamentData();
-        PageReader pageReader = url -> doc;
+        PageReader pageReader = url -> loadTournamentData();
         return Job.newJob(tournamentConfigReader, tournamentParser, pageReader, telegramSender);
     }
 
     // fixtures
+    private String getChatIdFromConfig(int index) {
+        return TestData.getTournament2PlayersConfig().getPlayers().get(index).getChatId();
+    }
 
-    private Document loadTournamentData() throws IOException {
+    private Document loadTournamentData() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("tournament2.html").getFile());
-        return Jsoup.parse(file, "utf-8");
+        try {
+            return Jsoup.parse(file, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
