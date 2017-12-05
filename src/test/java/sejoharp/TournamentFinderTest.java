@@ -26,8 +26,9 @@ public class TournamentFinderTest {
         Set<String> tournaments = tournamentFinder(pageReader, tournamentReader).findNewTournaments(config);
 
         // then
-        assertThat(tournaments, hasSize(1));
+        assertThat(tournaments, hasSize(2));
         assertThat(tournaments, hasItem("http://www.tifu.info/turnier?turnierid=177&ver=2"));
+        assertThat(tournaments, hasItem("http://www.tifu.info/turnier?turnierid=177&ver=3"));
     }
 
     @Test
