@@ -26,7 +26,7 @@ public class Job {
     private final PageReader pageReader;
     private final TelegramSender telegramSender;
     private final TournamentFinder tournamentFinder;
-    private final Set<Match> sentNotifications = new HashSet<>();
+    private final Set<Notification> sentNotifications = new HashSet<>();
     private Set<String> interestingTournaments;
 
     @Autowired
@@ -105,7 +105,7 @@ public class Job {
         notifications.forEach(notification -> {
             try {
                 telegramSender.sendMessage(notification);
-                sentNotifications.add(notification.getMatch());
+                sentNotifications.add(notification);
                 log.info("sending notification: " + notification);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -116,13 +116,13 @@ public class Job {
     List<Notification> findNewMatches(List<Match> matches, Player player) {
         return matches.stream()
                 .filter(match -> containsRegisteredPlayer(player, match))
-                .filter(this::isNewNotification)
                 .map(match -> notification(match, player.getChatId()))
+                .filter(this::isNewNotification)
                 .collect(toList());
     }
 
-    private boolean isNewNotification(Match match) {
-        return !sentNotifications.contains(match);
+    private boolean isNewNotification(Notification notification) {
+        return !sentNotifications.contains(notification);
     }
 
     private static boolean containsRegisteredPlayer(Player player, Match match) {
