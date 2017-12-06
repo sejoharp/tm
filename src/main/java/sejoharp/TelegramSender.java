@@ -25,14 +25,8 @@ public class TelegramSender {
     }
 
     public void sendMessage(Notification notification) {
-        HttpUrl url = HttpUrl.parse(config.getTelegramUrl())
-                .newBuilder()
-                .addPathSegment(SEND_MESSAGE)
-                .build();
-        RequestBody body = new FormBody.Builder()
-                .add("chat_id", notification.getChatId())
-                .add("text", notification.getMatch().toFormattedString())
-                .build();
+        HttpUrl url = composeRequestUrl();
+        RequestBody body = composeRequestBody(notification);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -43,6 +37,20 @@ public class TelegramSender {
         } catch (IOException e) {
             LOGGER.error("failed to send telegram notification. message: {}", e.getMessage());
         }
+    }
+
+    private FormBody composeRequestBody(Notification notification) {
+        return new FormBody.Builder()
+                .add("chat_id", notification.getChatId())
+                .add("text", notification.getMatch().toFormattedString())
+                .build();
+    }
+
+    private HttpUrl composeRequestUrl() {
+        return HttpUrl.parse(config.getTelegramUrl())
+                .newBuilder()
+                .addPathSegment(SEND_MESSAGE)
+                .build();
     }
 
     private static void logError(Response response) throws IOException {
