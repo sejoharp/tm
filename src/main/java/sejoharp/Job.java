@@ -21,7 +21,7 @@ import static sejoharp.Notification.notification;
 public class Job {
     private static final Logger log = LoggerFactory.getLogger(Job.class);
 
-    private final TournamentConfigReader tournamentConfigReader;
+    private final PlayerConfigReader playerConfigReader;
     private final TournamentParser tournamentParser;
     private final PageReader pageReader;
     private final TelegramSender telegramSender;
@@ -30,12 +30,12 @@ public class Job {
     private Set<String> interestingTournaments;
 
     @Autowired
-    private Job(TournamentConfigReader tournamentConfigReader,
+    private Job(PlayerConfigReader playerConfigReader,
                 TournamentParser tournamentParser,
                 PageReader pageReader,
                 TelegramSender telegramSender,
                 TournamentFinder tournamentFinder) {
-        this(tournamentConfigReader,
+        this(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
@@ -43,13 +43,13 @@ public class Job {
                 new HashSet<>());
     }
 
-    private Job(TournamentConfigReader tournamentConfigReader,
+    private Job(PlayerConfigReader playerConfigReader,
                 TournamentParser tournamentParser,
                 PageReader pageReader,
                 TelegramSender telegramSender,
                 TournamentFinder tournamentFinder,
                 Set<String> interestingTournaments) {
-        this.tournamentConfigReader = tournamentConfigReader;
+        this.playerConfigReader = playerConfigReader;
         this.tournamentParser = tournamentParser;
         this.pageReader = pageReader;
         this.telegramSender = telegramSender;
@@ -57,13 +57,13 @@ public class Job {
         this.interestingTournaments = interestingTournaments;
     }
 
-    public static Job newJob(TournamentConfigReader tournamentConfigReader,
+    public static Job newJob(PlayerConfigReader playerConfigReader,
                              TournamentParser tournamentParser,
                              PageReader pageReader,
                              TelegramSender telegramSender,
                              TournamentFinder tournamentFinder,
                              Set<String> interestingTournaments) {
-        return new Job(tournamentConfigReader,
+        return new Job(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
@@ -75,11 +75,11 @@ public class Job {
     public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         log.info("reading matches...");
 
-        TournamentConfig tournamentConfig = tournamentConfigReader.getTournamentConfig();
+        PlayerConfig playerConfig = playerConfigReader.getPlayerConfig();
         interestingTournaments.stream()
                 .map(pageReader::getPage)
                 .map(tournamentParser::getMatchesFrom)
-                .map(matches -> findAllNewMatches(matches, tournamentConfig.getPlayers()))
+                .map(matches -> findAllNewMatches(matches, playerConfig.getPlayers()))
                 .forEach(this::notifyPlayer);
     }
 
@@ -87,7 +87,7 @@ public class Job {
     public void refreshInterestingTournaments() throws IOException {
         log.info("looking for new tournaments...");
 
-        TournamentConfig config = tournamentConfigReader.getTournamentConfig();
+        PlayerConfig config = playerConfigReader.getPlayerConfig();
         Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, this.interestingTournaments);
         this.interestingTournaments = interestingTournaments;
 

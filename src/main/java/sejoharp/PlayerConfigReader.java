@@ -5,6 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import java.io.IOException;
 
-public interface TournamentConfigReader {
-    TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException;
+public interface PlayerConfigReader {
+    PlayerConfig getPlayerConfig() throws JsonParseException, JsonMappingException, IOException;
 }

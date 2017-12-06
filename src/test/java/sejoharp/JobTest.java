@@ -23,8 +23,8 @@ public class JobTest {
     @Test
     public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
         // given
-        TournamentConfig tournamentConfig = TestData.getTournament2PlayersConfig();
-        Job job = createJob(() -> tournamentConfig, new HashSet<>(singletonList("tournamentUrl")));
+        PlayerConfig playerConfig = TestData.get2PlayersConfig();
+        Job job = createJob(() -> playerConfig, new HashSet<>(singletonList("tournamentUrl")));
 
         // when
         job.notifyPlayerForNewMatches();
@@ -34,13 +34,13 @@ public class JobTest {
         verify(telegramSender, times(2)).sendMessage(argumentCaptor.capture());
         String recipientAddress = argumentCaptor.getAllValues().get(0).getChatId();
         String recipientAddress1 = argumentCaptor.getAllValues().get(1).getChatId();
-        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(tournamentConfig, 0));
-        assertThat(recipientAddress1).isEqualTo(getChatIdFromConfig(tournamentConfig, 1));
+        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(playerConfig, 0));
+        assertThat(recipientAddress1).isEqualTo(getChatIdFromConfig(playerConfig, 1));
     }
 
     @Test
     public void doesNotFindOldMatches() throws IOException, MessagingException {
-        Job job = createJob(TestData::getTournament1PlayerConfig, new HashSet<>(singletonList("tournamentUrl")));
+        Job job = createJob(TestData::get1PlayerConfig, new HashSet<>(singletonList("tournamentUrl")));
 
         job.notifyPlayerForNewMatches();
         job.notifyPlayerForNewMatches();
@@ -56,9 +56,9 @@ public class JobTest {
         PageReader pageReader = url -> loadTournamentData();
         telegramSender = mock(TelegramSender.class);
         TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(singletonList("tournamentUrl"));
-        TournamentConfig tournamentConfig = TestData.getTournament1PlayerConfig();
+        PlayerConfig playerConfig = TestData.get1PlayerConfig();
         Job job = Job.newJob(
-                () -> tournamentConfig,
+                () -> playerConfig,
                 tournamentParser,
                 pageReader,
                 telegramSender,
@@ -73,16 +73,16 @@ public class JobTest {
         ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
         verify(telegramSender).sendMessage(argumentCaptor.capture());
         String recipientAddress = argumentCaptor.getValue().getChatId();
-        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(tournamentConfig, 0));
+        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(playerConfig, 0));
     }
 
     // helpers
-    private Job createJob(TournamentConfigReader tournamentConfigReader, HashSet<String> tournamentUrls) throws IOException, MessagingException {
+    private Job createJob(PlayerConfigReader playerConfigReader, HashSet<String> tournamentUrls) throws IOException, MessagingException {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         telegramSender = mock(TelegramSender.class);
         PageReader pageReader = url -> loadTournamentData();
         HashSet<String> interestingTournaments = tournamentUrls;
-        return Job.newJob(tournamentConfigReader,
+        return Job.newJob(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
@@ -93,8 +93,8 @@ public class JobTest {
 
 
     // fixtures
-    private String getChatIdFromConfig(TournamentConfig tournamentConfig, int index) {
-        return tournamentConfig.getPlayers().get(index).getChatId();
+    private String getChatIdFromConfig(PlayerConfig playerConfig, int index) {
+        return playerConfig.getPlayers().get(index).getChatId();
     }
 
     private Document loadTournamentData() {

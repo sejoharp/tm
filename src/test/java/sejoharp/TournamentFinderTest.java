@@ -22,7 +22,7 @@ public class TournamentFinderTest {
     @Test
     public void findsTournamentsWithPlayers() throws Exception {
         // given
-        TournamentConfig config = TestData.getTournament1PlayerConfig2();
+        PlayerConfig config = TestData.get1PlayerConfig2();
         PageReader tournamentReader = url -> loadTournament();
         TournamentFinderImpl tournamentFinder = tournamentFinder(null, tournamentReader);
 
@@ -38,7 +38,7 @@ public class TournamentFinderTest {
         // given
         PageReader pageReader = url -> loadTournamentOverview();
         PageReader tournamentReader = url -> loadTournament();
-        TournamentConfig config = TestData.getTournament1PlayerConfig();
+        PlayerConfig config = TestData.get1PlayerConfig();
         TournamentFinderImpl tournamentFinder = tournamentFinder(null, tournamentReader);
 
         // when

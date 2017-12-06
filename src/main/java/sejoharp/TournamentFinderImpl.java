@@ -29,7 +29,7 @@ public class TournamentFinderImpl implements TournamentFinder {
         return new TournamentFinderImpl(pageReader, tournamentReader);
     }
 
-    public Set<String> calculateInterestingTournaments(TournamentConfig config, Set<String> knownTournaments) {
+    public Set<String> calculateInterestingTournaments(PlayerConfig config, Set<String> knownTournaments) {
         Set<String> runningTournaments = findRunningTournaments();
         Set<String> interestingTournaments = findInterestingTournaments(config, runningTournaments);
         return runningTournaments.stream()
@@ -48,16 +48,16 @@ public class TournamentFinderImpl implements TournamentFinder {
         return emptySet();
     }
 
-    Set<String> findInterestingTournaments(TournamentConfig tournamentConfig, Set<String> runningTournaments) {
+    Set<String> findInterestingTournaments(PlayerConfig playerConfig, Set<String> runningTournaments) {
         return runningTournaments.stream()
-                .filter(url -> containsPlayer(url, tournamentConfig))
+                .filter(url -> containsPlayer(url, playerConfig))
                 .collect(toSet());
     }
 
-    boolean containsPlayer(String url, TournamentConfig tournamentConfig) {
+    boolean containsPlayer(String url, PlayerConfig playerConfig) {
         Document page = tournamentReader.getPage(url);
         String decodedPage = TournamentParserImpl.removeHtmlEncoding(page.body().text());
-        for (Player player : tournamentConfig.getPlayers()) {
+        for (Player player : playerConfig.getPlayers()) {
             if (decodedPage.contains(player.getName())) {
                 return true;
             }

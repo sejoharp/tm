@@ -5,28 +5,28 @@ import static java.util.Collections.singletonList;
 import static sejoharp.Config.emptyConfig;
 import static sejoharp.Match.emptyMatch;
 import static sejoharp.Player.createPlayer;
-import static sejoharp.TournamentConfig.tournamentConfig;
+import static sejoharp.PlayerConfig.playerConfig;
 
 class TestData {
-    static TournamentConfig getTournament1PlayerConfig() {
-        return tournamentConfig("http://tournament.com/tour",
+    static PlayerConfig get1PlayerConfig() {
+        return playerConfig(
                 singletonList(createPlayer("User1", "1")));
     }
 
-    static TournamentConfig getTournament1PlayerConfig2() {
-        return tournamentConfig("http://tournament.com/tour",
+    static PlayerConfig get1PlayerConfig2() {
+        return playerConfig(
                 singletonList(createPlayer("Marlin Sielfeld", "1")));
     }
 
-    static TournamentConfig getTournament2PlayersConfig() {
-        return TournamentConfig.tournamentConfig("http://tournament.com/tour",
+    static PlayerConfig get2PlayersConfig() {
+        return PlayerConfig.playerConfig(
                 asList(
                         createPlayer("User1", "1"),
                         createPlayer("User2", "2")));
     }
 
-    static TournamentConfig getTournament2PlayersConfig2() {
-        return TournamentConfig.tournamentConfig("http://tournament.com/tour",
+    static PlayerConfig get2PlayersConfig2() {
+        return PlayerConfig.playerConfig(
                 asList(createPlayer("Userß", "1"),
                         createPlayer("User2", "2")));
     }

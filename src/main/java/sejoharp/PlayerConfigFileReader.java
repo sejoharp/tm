@@ -10,17 +10,17 @@ import java.io.File;
 import java.io.IOException;
 
 @Component
-public class TournamentConfigFileReader implements TournamentConfigReader {
+public class PlayerConfigFileReader implements PlayerConfigReader {
     private final Config config;
 
     @Autowired
-    public TournamentConfigFileReader(Config config) {
+    public PlayerConfigFileReader(Config config) {
         this.config = config;
     }
 
     @Override
-    public TournamentConfig getTournamentConfig() throws JsonParseException, JsonMappingException, IOException {
+    public PlayerConfig getPlayerConfig() throws JsonParseException, JsonMappingException, IOException {
         File configFile = new File(config.getTournamentConfigPath());
-        return new ObjectMapper().readValue(configFile, TournamentConfig.class);
+        return new ObjectMapper().readValue(configFile, PlayerConfig.class);
     }
 }
