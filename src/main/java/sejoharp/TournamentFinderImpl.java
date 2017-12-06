@@ -38,7 +38,7 @@ public class TournamentFinderImpl implements TournamentFinder {
     }
 
     Set<String> findRunningTournaments() {
-        Document page = pageReader.getPage("www.tifu.info");
+        Document page = pageReader.getPage("http://www.tifu.info");
         if (LAUFENDE_TURNIERE.equals(page.select(RUNNING_TOURNAMENTS_SELECTOR).text())) {
             Elements runningTournaments = page.select(LINK_SELECTOR);
             return runningTournaments.stream()
