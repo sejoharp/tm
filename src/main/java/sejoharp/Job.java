@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static sejoharp.Notification.notification;
@@ -25,7 +26,7 @@ public class Job {
     private final TournamentParser tournamentParser;
     private final PageReader pageReader;
     private final TelegramSender telegramSender;
-    private HashSet<Match> sentNotifications = new HashSet<>();
+    private Set<Match> sentNotifications = new HashSet<>();
 
     @Autowired
     private Job(TournamentConfigReader tournamentConfigReader,

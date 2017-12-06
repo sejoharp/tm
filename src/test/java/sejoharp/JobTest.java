@@ -22,7 +22,8 @@ public class JobTest {
     @Test
     public void finds2NewMatches() throws MessagingException, JsonParseException, JsonMappingException, IOException {
         // given
-        Job job = createJob(TestData::getTournament2PlayersConfig);
+        TournamentConfig tournamentConfig = TestData.getTournament2PlayersConfig();
+        Job job = createJob(() -> tournamentConfig);
 
         // when
         job.notifyPlayerForNewMatches();
@@ -32,8 +33,8 @@ public class JobTest {
         verify(telegramSender, times(2)).sendMessage(argumentCaptor.capture());
         String recipientAddress = argumentCaptor.getAllValues().get(0).getChatId();
         String recipientAddress1 = argumentCaptor.getAllValues().get(1).getChatId();
-        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(0));
-        assertThat(recipientAddress1).isEqualTo(getChatIdFromConfig(1));
+        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(tournamentConfig, 0));
+        assertThat(recipientAddress1).isEqualTo(getChatIdFromConfig(tournamentConfig, 1));
     }
 
     @Test
@@ -55,8 +56,8 @@ public class JobTest {
     }
 
     // fixtures
-    private String getChatIdFromConfig(int index) {
-        return TestData.getTournament2PlayersConfig().getPlayers().get(index).getChatId();
+    private String getChatIdFromConfig(TournamentConfig tournamentConfig, int index) {
+        return tournamentConfig.getPlayers().get(index).getChatId();
     }
 
     private Document loadTournamentData() {

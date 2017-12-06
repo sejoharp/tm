@@ -42,7 +42,7 @@ public class TournamentFinderImpl implements TournamentFinder {
         if (LAUFENDE_TURNIERE.equals(page.select(RUNNING_TOURNAMENTS_SELECTOR).text())) {
             Elements runningTournaments = page.select(LINK_SELECTOR);
             return runningTournaments.stream()
-                    .map(TournamentFinderImpl::getUrl)
+                    .map(TournamentFinderImpl::composeUrl)
                     .collect(toSet());
         }
         return emptySet();
@@ -65,7 +65,7 @@ public class TournamentFinderImpl implements TournamentFinder {
         return false;
     }
 
-    private static String getUrl(Element element) {
+    private static String composeUrl(Element element) {
         return element.baseUri() + element.attr("href");
     }
 }
