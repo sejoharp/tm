@@ -7,7 +7,7 @@ import static sejoharp.Match.emptyMatch;
 
 public class MatchTest {
     @Test
-    public void formatsMail() {
+    public void formatsMatch() {
         Match match = emptyMatch()
                 .withTableNumber("2")
                 .withDiscipline("GD Vorr.")

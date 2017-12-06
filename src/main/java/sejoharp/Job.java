@@ -2,8 +2,6 @@ package sejoharp;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,38 +20,78 @@ import static sejoharp.Notification.notification;
 @Component
 public class Job {
     private static final Logger log = LoggerFactory.getLogger(Job.class);
+
     private final TournamentConfigReader tournamentConfigReader;
     private final TournamentParser tournamentParser;
     private final PageReader pageReader;
     private final TelegramSender telegramSender;
-    private Set<Match> sentNotifications = new HashSet<>();
+    private final TournamentFinder tournamentFinder;
+    private final Set<Match> sentNotifications = new HashSet<>();
+    private Set<String> interestingTournaments;
 
     @Autowired
     private Job(TournamentConfigReader tournamentConfigReader,
                 TournamentParser tournamentParser,
                 PageReader pageReader,
-                TelegramSender telegramSender) {
+                TelegramSender telegramSender,
+                TournamentFinder tournamentFinder) {
+        this(tournamentConfigReader,
+                tournamentParser,
+                pageReader,
+                telegramSender,
+                tournamentFinder,
+                new HashSet<>());
+    }
+
+    private Job(TournamentConfigReader tournamentConfigReader,
+                TournamentParser tournamentParser,
+                PageReader pageReader,
+                TelegramSender telegramSender,
+                TournamentFinder tournamentFinder,
+                Set<String> interestingTournaments) {
         this.tournamentConfigReader = tournamentConfigReader;
         this.tournamentParser = tournamentParser;
         this.pageReader = pageReader;
         this.telegramSender = telegramSender;
+        this.tournamentFinder = tournamentFinder;
+        this.interestingTournaments = interestingTournaments;
     }
 
     public static Job newJob(TournamentConfigReader tournamentConfigReader,
                              TournamentParser tournamentParser,
                              PageReader pageReader,
-                             TelegramSender telegramSender){
-        return new Job(tournamentConfigReader, tournamentParser, pageReader, telegramSender);
+                             TelegramSender telegramSender,
+                             TournamentFinder tournamentFinder,
+                             Set<String> interestingTournaments) {
+        return new Job(tournamentConfigReader,
+                tournamentParser,
+                pageReader,
+                telegramSender,
+                tournamentFinder,
+                interestingTournaments);
     }
 
-    @Scheduled(initialDelay = 10000, fixedRate = 10000)
+    @Scheduled(initialDelay = 15000, fixedRate = 10000)
     public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
-        log.info("reading matches..");
+        log.info("reading matches...");
+
         TournamentConfig tournamentConfig = tournamentConfigReader.getTournamentConfig();
-        Document page = pageReader.getPage(tournamentConfig.getUrl());
-        List<Match> matches = tournamentParser.getMatchesFrom(page);
-        List<Notification> newMatches = findAllNewMatches(matches, tournamentConfig.getPlayers());
-        notifyPlayer(newMatches);
+        interestingTournaments.stream()
+                .map(pageReader::getPage)
+                .map(tournamentParser::getMatchesFrom)
+                .map(matches -> findAllNewMatches(matches, tournamentConfig.getPlayers()))
+                .forEach(this::notifyPlayer);
+    }
+
+    @Scheduled(initialDelay = 10000, fixedRate = 300000)
+    public void refreshInterestingTournaments() throws IOException {
+        log.info("looking for new tournaments...");
+
+        TournamentConfig config = tournamentConfigReader.getTournamentConfig();
+        Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, this.interestingTournaments);
+        this.interestingTournaments = interestingTournaments;
+
+        log.info("found {} interesting tournament(s): {}", interestingTournaments.size(), interestingTournaments);
     }
 
     List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
@@ -87,7 +125,7 @@ public class Job {
         return !sentNotifications.contains(match);
     }
 
-    private boolean containsRegisteredPlayer(Player player, Match match) {
+    private static boolean containsRegisteredPlayer(Player player, Match match) {
         return match.getTeam1().contains(player.getName())
                 || match.getTeam2().contains(player.getName());
     }

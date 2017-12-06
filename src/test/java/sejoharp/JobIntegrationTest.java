@@ -8,10 +8,10 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.StringContains.containsString;
 import static sejoharp.Player.createPlayer;
 
 public class JobIntegrationTest {
@@ -27,11 +27,11 @@ public class JobIntegrationTest {
 
         parser = new TournamentParserImpl();
         PageReader pageReader = url -> null;
-        job = Job.newJob(null, parser, pageReader, null);
+        job = Job.newJob(null, parser, pageReader, null, null, null);
     }
 
     @Test
-    public void findsNewMatches() throws IOException {
+    public void findsMatchesToNotify() throws IOException {
         // given
         List<Match> matches = parser.getMatchesFrom(doc);
 
@@ -44,7 +44,7 @@ public class JobIntegrationTest {
     }
 
     @Test
-    public void finds2NewMatches() throws IOException {
+    public void finds2MatchesToNotify() throws IOException {
         // given
         List<Match> matches = parser.getMatchesFrom(doc);
         List<Player> players = Arrays.asList(
