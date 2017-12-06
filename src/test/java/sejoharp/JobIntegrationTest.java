@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static sejoharp.Player.createPlayer;
 
@@ -36,7 +38,8 @@ public class JobIntegrationTest {
         List<Match> matches = parser.getMatchesFrom(doc);
 
         // when
-        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "1"));
+        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "1"))
+                .collect(toList());
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1()).contains("Reimer");
@@ -52,7 +55,7 @@ public class JobIntegrationTest {
                 createPlayer("Borck", "2"));
 
         // when
-        List<Notification> newMatches = job.findAllNewMatches(matches, players);
+        List<Notification> newMatches = job.findAllNewMatches(matches, players).collect(toList());
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1()).contains("Reimer");

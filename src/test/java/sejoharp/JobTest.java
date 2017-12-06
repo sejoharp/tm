@@ -81,13 +81,12 @@ public class JobTest {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         telegramSender = mock(TelegramSender.class);
         PageReader pageReader = url -> loadTournamentData();
-        HashSet<String> interestingTournaments = tournamentUrls;
         return Job.newJob(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
                 null,
-                interestingTournaments
+                tournamentUrls
         );
     }
 

@@ -9,12 +9,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 import static sejoharp.Notification.notification;
 
 @Component
@@ -80,6 +80,7 @@ public class Job {
                 .map(pageReader::getPage)
                 .map(tournamentParser::getMatchesFrom)
                 .map(matches -> findAllNewMatches(matches, playerConfig.getPlayers()))
+                .flatMap(Function.identity())
                 .forEach(this::notifyPlayer);
     }
 
@@ -94,35 +95,31 @@ public class Job {
         log.info("found {} interesting tournament(s): {}", interestingTournaments.size(), interestingTournaments);
     }
 
-    List<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
+    Stream<Notification> findAllNewMatches(List<Match> matches, List<Player> players) {
         return players.stream()
                 .map(player -> findNewMatches(matches, player))
-                .flatMap(Collection::stream)
-                .collect(toList());
+                .flatMap(Function.identity());
     }
 
-    private void notifyPlayer(List<Notification> notifications) {
-        notifications.forEach(notification -> {
-            try {
-                telegramSender.sendMessage(notification);
-                sentNotifications.add(notification);
-                log.info("sending notification: " + notification);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    private void notifyPlayer(Notification notification) {
+        try {
+            telegramSender.sendMessage(notification);
+            sentNotifications.add(notification);
+            log.info("sending notification: " + notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    List<Notification> findNewMatches(List<Match> matches, Player player) {
+    Stream<Notification> findNewMatches(List<Match> matches, Player player) {
         return matches.stream()
                 .filter(match -> containsRegisteredPlayer(player, match))
                 .map(match -> notification(match, player.getChatId()))
-                .filter(this::isNewNotification)
-                .collect(toList());
+                .filter(this::isNewNotification);
     }
 
-    private boolean isNewNotification(Notification notification) {
-        return !sentNotifications.contains(notification);
+    private boolean isNewNotification(Notification match) {
+        return !sentNotifications.contains(match);
     }
 
     private static boolean containsRegisteredPlayer(Player player, Match match) {
