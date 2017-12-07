@@ -19,7 +19,12 @@ apply plugin: 'nebula.release'
 
 jar {
     baseName = 'tm'
-    version = '1.0.0'
+    def output = new ByteArrayOutputStream()
+    exec {
+        commandLine "git","describe","--tags"
+        standardOutput = output
+    }
+    version = output.toString().trim()
 }
 
 repositories {
