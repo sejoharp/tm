@@ -4,7 +4,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +22,7 @@ public class TelegramSenderIntegrationTest {
 
         Config config = emptyConfig().withTelegramUrl(url.toString());
         OkHttpClient httpClient = new OkHttpClient();
-        TelegramSender sender = TelegramSender.sender(config, httpClient);
+        TelegramSender sender = TelegramSenderImpl.sender(config, httpClient);
 
         // when
         Notification notification = notification(TestData.getMatch(), "1");
@@ -44,7 +43,7 @@ public class TelegramSenderIntegrationTest {
         String token = "123:mytoken";
         Config config = emptyConfig().withTelegramUrl("https://api.telegram.org/bot" + token);
         OkHttpClient httpClient = new OkHttpClient();
-        TelegramSender sender = TelegramSender.sender(config, httpClient);
+        TelegramSender sender = TelegramSenderImpl.sender(config, httpClient);
 
         // when
         String chatId = "1";

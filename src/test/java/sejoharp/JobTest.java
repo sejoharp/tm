@@ -12,8 +12,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,10 +53,9 @@ public class JobTest {
     @Test
     public void refreshesInterestingTournaments() throws IOException, MessagingException {
         // given
-
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         PageReader pageReader = url -> loadTournamentData();
-        telegramSender = mock(TelegramSender.class);
+        telegramSender = mock(TelegramSenderImpl.class);
         TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(singletonList("tournamentUrl"));
         PlayerConfig playerConfig = TestData.get1PlayerConfig();
         Job job = Job.newJob(
@@ -79,7 +80,7 @@ public class JobTest {
     // helpers
     private Job createJob(PlayerConfigReader playerConfigReader, HashSet<String> tournamentUrls) throws IOException, MessagingException {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
-        telegramSender = mock(TelegramSender.class);
+        telegramSender = mock(TelegramSenderImpl.class);
         PageReader pageReader = url -> loadTournamentData();
         return Job.newJob(playerConfigReader,
                 tournamentParser,
