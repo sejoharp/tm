@@ -4,15 +4,18 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
+        classpath 'com.netflix.nebula:nebula-release-plugin:6.0.0'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'nebula.release'
 
 jar {
     baseName = 'tm'
