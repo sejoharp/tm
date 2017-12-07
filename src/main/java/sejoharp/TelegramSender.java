@@ -34,6 +34,7 @@ public class TelegramSender {
         try {
             Response response = httpClient.newCall(request).execute();
             logError(response);
+            response.close();
         } catch (IOException e) {
             LOGGER.error("failed to send telegram notification. message: {}", e.getMessage());
         }

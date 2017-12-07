@@ -49,7 +49,7 @@ public class Config {
     public String toString() {
         return "Config{" +
                 "tournamentConfigPath='" + tournamentConfigPath + '\'' +
-                ", telegramUrl='" + telegramUrl + '\'' +
+                ", telegramUrl='" + telegramUrl.substring(0,25) + '\'' +
                 '}';
     }
 
