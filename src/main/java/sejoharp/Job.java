@@ -73,8 +73,6 @@ public class Job {
 
     @Scheduled(initialDelay = 15000, fixedRate = 10000)
     public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
-        log.info("reading matches...");
-
         PlayerConfig playerConfig = playerConfigReader.getPlayerConfig();
         interestingTournaments.stream()
                 .map(pageReader::getPage)
@@ -86,8 +84,6 @@ public class Job {
 
     @Scheduled(initialDelay = 10000, fixedRate = 300000)
     public void refreshInterestingTournaments() throws IOException {
-        log.info("looking for new tournaments...");
-
         PlayerConfig config = playerConfigReader.getPlayerConfig();
         Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, this.interestingTournaments);
         this.interestingTournaments = interestingTournaments;
