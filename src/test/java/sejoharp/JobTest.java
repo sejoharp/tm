@@ -77,6 +77,32 @@ public class JobTest {
         assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(playerConfig, 0));
     }
 
+    @Test
+    public void doesNotReadTournamentPagesWith0InterestingTournaments() throws Exception {
+        // given
+        PageReader pageReader = url -> {
+            fail("no tournament available, so there is no page to parse");
+            return null;
+        };
+        TelegramSender telegramSender = notification -> fail("no telegram send message call expected");
+
+        TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
+        TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(emptyList());
+        PlayerConfig playerConfig = TestData.get1PlayerConfig();
+        PlayerConfigReader playerConfigReader = () -> playerConfig;
+        Job job = Job.newJob(
+                playerConfigReader,
+                tournamentParser,
+                pageReader,
+                telegramSender,
+                tournamentFinder,
+                new HashSet<>());
+
+        // when
+        job.refreshInterestingTournaments();
+        job.notifyPlayerForNewMatches();
+    }
+
     // helpers
     private Job createJob(PlayerConfigReader playerConfigReader, HashSet<String> tournamentUrls) throws IOException, MessagingException {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
