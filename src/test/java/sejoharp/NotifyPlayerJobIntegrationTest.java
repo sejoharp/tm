@@ -13,9 +13,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static sejoharp.Player.createPlayer;
+import static sejoharp.TournamentRepository.emptyRepo;
 
-public class JobIntegrationTest {
-    private Job job;
+public class NotifyPlayerJobIntegrationTest {
+    private NotifyPlayerJob notifyPlayerJob;
     private TournamentParserImpl parser;
     private Document doc;
 
@@ -27,7 +28,7 @@ public class JobIntegrationTest {
 
         parser = new TournamentParserImpl();
         PageReader pageReader = url -> null;
-        job = Job.newJob(null, parser, pageReader, null, null, null);
+        notifyPlayerJob = NotifyPlayerJob.newNotifyPlayerJob(null, parser, pageReader, null, emptyRepo());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class JobIntegrationTest {
         List<Match> matches = parser.getMatchesFrom(doc);
 
         // when
-        List<Notification> newMatches = job.findNewMatches(matches, createPlayer("Reimer", "1"))
+        List<Notification> newMatches = notifyPlayerJob.findNewNotifications(matches, createPlayer("Reimer", "1"))
                 .collect(toList());
 
         // then
@@ -53,7 +54,7 @@ public class JobIntegrationTest {
                 createPlayer("Borck", "2"));
 
         // when
-        List<Notification> newMatches = job.findAllNewMatches(matches, players).collect(toList());
+        List<Notification> newMatches = notifyPlayerJob.findAllNewNotifications(matches, players).collect(toList());
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1()).contains("Reimer");

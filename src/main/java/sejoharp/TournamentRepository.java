@@ -54,4 +54,8 @@ public class TournamentRepository {
     public Set<String> getTournaments() {
         return interestingTournaments;
     }
+
+    public boolean isNewNotification(Notification notification) {
+        return !sentNotifications.contains(notification);
+    }
 }

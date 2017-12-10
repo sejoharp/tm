@@ -66,6 +66,19 @@ public class TournamentRepositoryTest {
     }
 
     @Test
+    public void findsNewNotification() throws Exception {
+        // given
+        Notification notification = notification(TestData.getMatch(), "1");
+        TournamentRepository repository = repo(new HashSet<>(), new HashSet<>(Collections.singletonList(notification)));
+
+        // when
+        boolean newNotification = repository.isNewNotification(notification);
+
+        // then
+        assertThat(newNotification).isFalse();
+    }
+
+    @Test
     public void getsTournamentsSize() throws Exception {
         // given
         TournamentRepository repository = emptyRepo();
