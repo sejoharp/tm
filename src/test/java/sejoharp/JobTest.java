@@ -104,29 +104,21 @@ public class JobTest {
     @Test
     public void resetsSentNotificationsWhen0InterestingTournamentsFound() throws Exception {
         // given
-        PageReader pageReader = url -> {
-            fail("no tournament available, so there is no page to parse");
-            return null;
-        };
-        TelegramSender telegramSender = notification -> fail("no telegram send message call expected");
-
-        TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(emptyList());
-        PlayerConfigReader playerConfigReader = () -> TestData.get1PlayerConfig();
+        PlayerConfigReader playerConfigReader = () -> null;
         HashSet<String> interestingTournaments = new HashSet<>();
         HashSet<Notification> sentNotifications = new HashSet<>(singletonList(notification(TestData.getMatch(), "1")));
         TournamentRepository repository = TournamentRepository.repo(interestingTournaments, sentNotifications);
         Job job = Job.newJob(
                 playerConfigReader,
-                tournamentParser,
-                pageReader,
-                telegramSender,
+                null,
+                null,
+                null,
                 tournamentFinder,
                 repository);
 
         // when
         job.refreshInterestingTournaments();
-        job.notifyPlayerForNewMatches();
 
         // then
         assertThat(repository.getSentNotificationSize()).isEqualTo(0);

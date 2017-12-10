@@ -72,7 +72,8 @@ public class Job {
     @Scheduled(initialDelay = 10000, fixedRate = 300000)
     public void refreshInterestingTournaments() throws IOException {
         PlayerConfig config = playerConfigReader.getPlayerConfig();
-        Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, repository.getTournaments());
+        Set<String> knownTournaments = repository.getTournaments();
+        Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, knownTournaments);
         repository.replaceTournaments(interestingTournaments);
         if (interestingTournaments.isEmpty()){
             repository.resetNotifications();
