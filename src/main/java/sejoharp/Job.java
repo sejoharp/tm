@@ -27,34 +27,21 @@ public class Job {
     private final TelegramSender telegramSender;
     private final TournamentFinder tournamentFinder;
     private final Set<Notification> sentNotifications = new HashSet<>();
-    private Set<String> interestingTournaments;
+    private final TournamentRepository repository;
 
     @Autowired
     private Job(PlayerConfigReader playerConfigReader,
                 TournamentParser tournamentParser,
                 PageReader pageReader,
                 TelegramSender telegramSender,
-                TournamentFinder tournamentFinder) {
-        this(playerConfigReader,
-                tournamentParser,
-                pageReader,
-                telegramSender,
-                tournamentFinder,
-                new HashSet<>());
-    }
-
-    private Job(PlayerConfigReader playerConfigReader,
-                TournamentParser tournamentParser,
-                PageReader pageReader,
-                TelegramSender telegramSender,
                 TournamentFinder tournamentFinder,
-                Set<String> interestingTournaments) {
+                TournamentRepository repository) {
         this.playerConfigReader = playerConfigReader;
         this.tournamentParser = tournamentParser;
         this.pageReader = pageReader;
         this.telegramSender = telegramSender;
         this.tournamentFinder = tournamentFinder;
-        this.interestingTournaments = interestingTournaments;
+        this.repository = repository;
     }
 
     public static Job newJob(PlayerConfigReader playerConfigReader,
@@ -62,19 +49,19 @@ public class Job {
                              PageReader pageReader,
                              TelegramSender telegramSender,
                              TournamentFinder tournamentFinder,
-                             Set<String> interestingTournaments) {
+                             TournamentRepository repository) {
         return new Job(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
                 tournamentFinder,
-                interestingTournaments);
+                repository);
     }
 
     @Scheduled(initialDelay = 15000, fixedRate = 10000)
     public void notifyPlayerForNewMatches() throws JsonParseException, JsonMappingException, IOException {
         PlayerConfig playerConfig = playerConfigReader.getPlayerConfig();
-        interestingTournaments.stream()
+        repository.getTournaments().stream()
                 .map(pageReader::getPage)
                 .map(tournamentParser::getMatchesFrom)
                 .map(matches -> findAllNewMatches(matches, playerConfig.getPlayers()))
@@ -85,8 +72,11 @@ public class Job {
     @Scheduled(initialDelay = 10000, fixedRate = 300000)
     public void refreshInterestingTournaments() throws IOException {
         PlayerConfig config = playerConfigReader.getPlayerConfig();
-        Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, this.interestingTournaments);
-        this.interestingTournaments = interestingTournaments;
+        Set<String> interestingTournaments = tournamentFinder.calculateInterestingTournaments(config, repository.getTournaments());
+        repository.replaceTournaments(interestingTournaments);
+        if (interestingTournaments.isEmpty()){
+            repository.resetNotifications();
+        }
 
         log.info("found {} interesting tournament(s): {}", interestingTournaments.size(), interestingTournaments);
     }

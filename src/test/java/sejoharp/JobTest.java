@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static sejoharp.Notification.notification;
+import static sejoharp.TournamentRepository.emptyRepo;
 
 public class JobTest {
     private TelegramSender telegramSender;
@@ -53,28 +55,24 @@ public class JobTest {
     @Test
     public void refreshesInterestingTournaments() throws IOException, MessagingException {
         // given
+        PlayerConfigReader playerConfigReader = () -> TestData.get1PlayerConfig();
+        String tournamentUrl = "tournamentUrl";
+        TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(singletonList(tournamentUrl));
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
-        PageReader pageReader = url -> loadTournamentData();
-        telegramSender = mock(TelegramSenderImpl.class);
-        TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(singletonList("tournamentUrl"));
-        PlayerConfig playerConfig = TestData.get1PlayerConfig();
+        TournamentRepository repository = emptyRepo();
         Job job = Job.newJob(
-                () -> playerConfig,
+                playerConfigReader,
                 tournamentParser,
-                pageReader,
-                telegramSender,
+                null,
+                null,
                 tournamentFinder,
-                new HashSet<>());
+                repository);
 
         // when
         job.refreshInterestingTournaments();
-        job.notifyPlayerForNewMatches();
 
         // then
-        ArgumentCaptor<Notification> argumentCaptor = ArgumentCaptor.forClass(Notification.class);
-        verify(telegramSender).sendMessage(argumentCaptor.capture());
-        String recipientAddress = argumentCaptor.getValue().getChatId();
-        assertThat(recipientAddress).isEqualTo(getChatIdFromConfig(playerConfig, 0));
+        assertThat(repository.getTournaments()).containsExactly(tournamentUrl);
     }
 
     @Test
@@ -88,19 +86,50 @@ public class JobTest {
 
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(emptyList());
-        PlayerConfig playerConfig = TestData.get1PlayerConfig();
-        PlayerConfigReader playerConfigReader = () -> playerConfig;
+        PlayerConfigReader playerConfigReader = () -> TestData.get1PlayerConfig();
+        TournamentRepository repository = emptyRepo();
         Job job = Job.newJob(
                 playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
                 tournamentFinder,
-                new HashSet<>());
+                repository);
 
         // when
         job.refreshInterestingTournaments();
         job.notifyPlayerForNewMatches();
+    }
+
+    @Test
+    public void resetsSentNotificationsWhen0InterestingTournamentsFound() throws Exception {
+        // given
+        PageReader pageReader = url -> {
+            fail("no tournament available, so there is no page to parse");
+            return null;
+        };
+        TelegramSender telegramSender = notification -> fail("no telegram send message call expected");
+
+        TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
+        TournamentFinder tournamentFinder = (config, knownTournaments) -> new HashSet<>(emptyList());
+        PlayerConfigReader playerConfigReader = () -> TestData.get1PlayerConfig();
+        HashSet<String> interestingTournaments = new HashSet<>();
+        HashSet<Notification> sentNotifications = new HashSet<>(singletonList(notification(TestData.getMatch(), "1")));
+        TournamentRepository repository = TournamentRepository.repo(interestingTournaments, sentNotifications);
+        Job job = Job.newJob(
+                playerConfigReader,
+                tournamentParser,
+                pageReader,
+                telegramSender,
+                tournamentFinder,
+                repository);
+
+        // when
+        job.refreshInterestingTournaments();
+        job.notifyPlayerForNewMatches();
+
+        // then
+        assertThat(repository.getSentNotificationSize()).isEqualTo(0);
     }
 
     // helpers
@@ -108,13 +137,14 @@ public class JobTest {
         TournamentParser tournamentParser = document -> singletonList(TestData.getMatch());
         telegramSender = mock(TelegramSenderImpl.class);
         PageReader pageReader = url -> loadTournamentData();
+        TournamentRepository repository = TournamentRepository.repo(tournamentUrls, new HashSet<>());
+
         return Job.newJob(playerConfigReader,
                 tournamentParser,
                 pageReader,
                 telegramSender,
                 null,
-                tournamentUrls
-        );
+                repository);
     }
 
 
