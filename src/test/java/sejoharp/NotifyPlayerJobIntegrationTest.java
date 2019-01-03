@@ -37,7 +37,7 @@ public class NotifyPlayerJobIntegrationTest {
         List<Match> matches = parser.getMatchesFrom(doc);
 
         // when
-        List<Notification> newMatches = notifyPlayerJob.findNewNotifications(matches, createPlayer("Reimer", "1"))
+        List<Notification> newMatches = notifyPlayerJob.findNotificationsForPlayer(matches, createPlayer("Reimer", "1"))
                 .collect(toList());
 
         // then
@@ -54,7 +54,7 @@ public class NotifyPlayerJobIntegrationTest {
                 createPlayer("Borck", "2"));
 
         // when
-        List<Notification> newMatches = notifyPlayerJob.findAllNewNotifications(matches, players).collect(toList());
+        List<Notification> newMatches = notifyPlayerJob.findAllNotifications(matches, players).collect(toList());
 
         // then
         assertThat(newMatches.get(0).getMatch().getTeam1()).contains("Reimer");

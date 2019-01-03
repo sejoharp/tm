@@ -56,22 +56,22 @@ public class NotifyPlayerJob {
         repository.getTournaments().stream()
                 .map(pageReader::getPage)
                 .map(tournamentParser::getMatchesFrom)
-                .map(matches -> findAllNewNotifications(matches, playerConfig.getPlayers()))
+                .map(matches -> findAllNotifications(matches, playerConfig.getPlayers()))
                 .flatMap(Function.identity())
+                .filter(repository::isNewNotification)
                 .forEach(this::notifyPlayer);
     }
 
-    Stream<Notification> findAllNewNotifications(List<Match> matches, List<Player> players) {
+    Stream<Notification> findAllNotifications(List<Match> matches, List<Player> players) {
         return players.stream()
-                .map(player -> findNewNotifications(matches, player))
+                .map(player -> findNotificationsForPlayer(matches, player))
                 .flatMap(Function.identity());
     }
 
-    Stream<Notification> findNewNotifications(List<Match> matches, Player player) {
+    Stream<Notification> findNotificationsForPlayer(List<Match> matches, Player player) {
         return matches.stream()
                 .filter(match -> containsRegisteredPlayer(player, match))
-                .map(match -> notification(match, player.getChatId()))
-                .filter(repository::isNewNotification);
+                .map(match -> notification(match, player.getChatId()));
     }
 
     private void notifyPlayer(Notification notification) {
