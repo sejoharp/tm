@@ -30,15 +30,14 @@ public class TelegramSenderIntegrationTest {
 
         // then
         RecordedRequest recordedRequest = server.takeRequest();
-        assertThat(recordedRequest.getPath()).isEqualTo(PATH + "/sendMessage");
-        assertThat(recordedRequest.getMethod()).isEqualTo("POST");
-        assertThat(recordedRequest.getBody().readUtf8()).isEqualTo("chat_id=1&text=Tisch%3A2%20%7C%20Disziplin%3AGD%20Vorr.%20%7C%20Runde%3A2%20%7C%20User1%20%2F%20User2%20vs.%20User3%20%2F%20User4");
+        assertThat(recordedRequest.getPath()).isEqualTo(PATH + "/sendMessage?chat_id=1&text=Tisch:2%20|%20Disziplin:GD%20Vorr.%20|%20Runde:2%20|%20User1%20/%20User2%20vs.%20User3%20/%20User4");
+        assertThat(recordedRequest.getMethod()).isEqualTo("GET");
 
         server.shutdown();
     }
 
     @Test(enabled = false)
-    public void sendsMessage() throws Exception {
+    public void sendsMessage() {
         // given
         String token = "123:mytoken";
         Config config = emptyConfig().withTelegramUrl("https://api.telegram.org/bot" + token);

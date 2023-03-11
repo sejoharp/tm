@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class TelegramSenderImpl implements TelegramSender {
@@ -26,11 +27,10 @@ public class TelegramSenderImpl implements TelegramSender {
 
     @Override
     public void sendMessage(Notification notification) {
-        HttpUrl url = composeRequestUrl();
-        RequestBody body = composeRequestBody(notification);
+        HttpUrl url = composeRequestUrl(notification);
+
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
                 .build();
         try {
             Response response = httpClient.newCall(request).execute();
@@ -41,24 +41,22 @@ public class TelegramSenderImpl implements TelegramSender {
         }
     }
 
-    private FormBody composeRequestBody(Notification notification) {
-        return new FormBody.Builder()
-                .add("chat_id", notification.getChatId())
-                .add("text", notification.getMatch().toFormattedString())
-                .build();
-    }
-
-    private HttpUrl composeRequestUrl() {
-        return HttpUrl.parse(config.getTelegramUrl())
+    private HttpUrl composeRequestUrl(Notification notification) {
+        return Objects.requireNonNull(HttpUrl.parse(config.getTelegramUrl()))
                 .newBuilder()
                 .addPathSegment(SEND_MESSAGE)
+                .addQueryParameter("chat_id", notification.getChatId())
+                .addQueryParameter("text", notification.getMatch().toFormattedString())
                 .build();
     }
 
     private static void logError(Response response) throws IOException {
-        if (response.code() != 200){
+        if (response.code() != 200) {
             LOGGER.error(response.toString());
+            assert response.body() != null;
             LOGGER.error(response.body().string());
         }
     }
+
+
 }
